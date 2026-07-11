@@ -1,0 +1,10 @@
+# Root .dockerignore — fallback for direct `docker build .` from the project root.
+# NOTE: docker-compose.yml uses per-service build contexts (./backend, ./frontend),
+# so each service's own .dockerignore is what actually applies during compose builds.
+.git
+.venv
+node_modules
+__pycache__
+*.md
+skyvern/
+docs/

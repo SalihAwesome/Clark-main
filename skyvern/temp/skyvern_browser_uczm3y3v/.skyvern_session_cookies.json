@@ -1,0 +1,1 @@
+[{"name": "GeoIP", "value": "QA:DA:Doha:25.29:51.53:v4", "domain": ".wikipedia.org", "path": "/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "Lax"}, {"name": "enwikimwuser-sessionId", "value": "9172f74556e87ef8c973", "domain": "en.wikipedia.org", "path": "/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "Lax"}]

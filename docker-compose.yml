@@ -1,0 +1,50 @@
+# ============================================================================
+#  Clark — Docker Compose
+#  Orchestrates the FastAPI backend + Next.js frontend.
+# ============================================================================
+name: clark
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: clark-backend
+    ports:
+      - "8008:8008"
+    volumes:
+      # Persist profile, credentials, payment store, and audit trail
+      - agent_workspace:/app/agent_workspace
+    env_file:
+      - ./backend/.env
+    environment:
+      - BROWSER_HEADLESS=true
+      - BROWSER_PERSISTENT=false
+      - BROWSER_CDP_AUTODETECT=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8008/api/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - BACKEND_URL=http://backend:8008
+    container_name: clark-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      # Tells Next.js rewrites where to find the backend inside Docker
+      - BACKEND_URL=http://backend:8008
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  agent_workspace:

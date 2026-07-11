@@ -1,0 +1,35 @@
+# Secrets
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Agent runtime output (created at run time)
+backend/agent_workspace/
+agent_workspace/
+
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-error.log*
+
+# Editor / OS
+.history/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+START.bat
+scripts/
+start-chrome-debug.bat

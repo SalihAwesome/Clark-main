@@ -1,0 +1,411 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* Clark: pure-black base — the animated mesh shader sits behind everything. */
+body {
+  background-color: #000000;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #b08d57;
+  color: #000000;
+}
+
+/* Refined scrollbar (navy track, gold thumb) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f1a;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #0b0f1a;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b08d57;
+}
+
+/* Hide the scrollbar on a specific container while keeping it scrollable */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge/IE */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit (Chrome/Safari/Edge) */
+}
+
+/* Fine noise texture overlay (Clark: ~1.5%) */
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.015;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
+}
+
+/* Subtle grid overlay (Clark: ~2%) */
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Edge-to-edge marquee (CSS, GPU transform) */
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.grid-hairline {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Letter-by-letter color cycle for the hero (delay set inline per <span>) */
+@keyframes color-shift {
+  0%,
+  100% {
+    color: #ffffff;
+  }
+  25% {
+    color: #b08d57;
+  }
+  50% {
+    color: #d9dce3;
+  }
+  75% {
+    color: #2e3a4f;
+  }
+}
+.text-color-shift span {
+  display: inline-block;
+  animation: color-shift 4s ease-in-out infinite;
+}
+
+/* Card spotlight — a soft gold radial that follows the mouse on hover */
+.card-spotlight {
+  position: relative;
+  overflow: hidden;
+}
+.card-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  background: radial-gradient(
+    300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(176, 141, 87, 0.12),
+    rgba(46, 58, 79, 0.06) 50%,
+    transparent 100%
+  );
+}
+.card-spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Typing indicator */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.typing-dot {
+  animation: pulse-dot 1.1s infinite;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+/* Gold glow ring for the human-in-the-loop call to action */
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(176, 141, 87, 0), 0 0 24px rgba(176, 141, 87, 0.22);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.1), 0 0 34px rgba(176, 141, 87, 0.45);
+  }
+}
+.glow {
+  animation: glow 2.4s ease-in-out infinite;
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(176, 141, 87, 0.05) 25%,
+    rgba(176, 141, 87, 0.22) 37%,
+    rgba(176, 141, 87, 0.05) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.3s ease infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/* ── Clark component animations (buttons / labels / numerals) ──────────────── */
+
+/* Gold halo that breathes — primary action buttons + active mode toggle */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgba(176, 141, 87, 0.5), 0 4px 12px rgba(176, 141, 87, 0.3),
+      0 0 24px rgba(176, 141, 87, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(176, 141, 87, 0.7), 0 6px 16px rgba(176, 141, 87, 0.5),
+      0 0 36px rgba(176, 141, 87, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Soft opacity/glow pulse for the section title text */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.65;
+    text-shadow: 0 0 0 rgba(176, 141, 87, 0);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 12px rgba(176, 141, 87, 0.35);
+  }
+}
+
+/* Sweeping shine for gradient-clipped text (labels on card hover) */
+@keyframes text-shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@layer utilities {
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  /* Turns text into a sweeping gold→white→gold gradient shine */
+  .animate-shimmer {
+    background-image: linear-gradient(110deg, #b08d57 20%, #ffffff 50%, #b08d57 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: text-shimmer 3s linear infinite;
+  }
+  /* Static gold gradient text (used for the number badge on hover) */
+  .text-gradient-accent {
+    background-image: linear-gradient(135deg, #b08d57, #e9d9b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Electron frameless window drag regions (no effect in a browser) */
+.drag-region {
+  -webkit-app-region: drag;
+}
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Respect reduced-motion: stop marquees and long animations */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .glow,
+  .shimmer,
+  .animate-glow-pulse,
+  .animate-pulse-glow,
+  .animate-shimmer,
+  .text-color-shift span {
+    animation: none !important;
+  }
+}
+
+/* ── Clark action buttons: matched Send / Stop pair ────────────────────────────
+   ONE shared recipe (lit-metal gradient + hairline insets live in the className)
+   plus self-contained CSS treatments, all namespaced btn-* to avoid collisions:
+     .btn-sheen        — slow themeable specular light-sweep (Send = gold,
+                         Stop = warm amber), tint/speed driven by CSS vars so the
+                         buttons read as obvious siblings.
+     .btn-send-breathe — Send's signature soft gold halo that breathes ~3.6s.
+     .btn-stop-dot     — Stop's calm dusty-rose "interruptible" status dot.
+     .btn-send-arrow   — Send's magnetic arrow nudge on hover.
+   All infinite motion is disabled under prefers-reduced-motion. */
+
+/* Signature breathing halo for the gold Send (gentler/slower than glow-pulse). */
+@keyframes btn-send-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.18) inset,
+      0 2px 10px -2px rgba(176, 141, 87, 0.45),
+      0 0 0 0 rgba(176, 141, 87, 0);
+  }
+  50% {
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.18) inset,
+      0 2px 10px -2px rgba(176, 141, 87, 0.55),
+      0 0 22px 1px rgba(176, 141, 87, 0.28);
+  }
+}
+
+/* Specular light-sweep: a narrow diagonal band glides left → right on a loop
+   with a long dwell beat, so it reads as a single tasteful pass, not a flash. */
+@keyframes btn-sheen-glide {
+  0% {
+    transform: translateX(-180%) skewX(-18deg);
+  }
+  60%,
+  100% {
+    transform: translateX(320%) skewX(-18deg);
+  }
+}
+
+/* Calm "active / interruptible" ping for the Stop status dot. */
+@keyframes btn-stop-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .btn-send-breathe {
+    animation: btn-send-breathe 3.6s ease-in-out infinite;
+  }
+
+  /* Themeable sheen shared by Send (gold-white) and Stop (warm amber). */
+  .btn-sheen {
+    --btn-sheen-tint: rgba(255, 255, 255, 0.45);
+    --btn-sheen-speed: 4.5s;
+  }
+  .btn-sheen::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 60%;
+    pointer-events: none;
+    z-index: 1;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      transparent 30%,
+      var(--btn-sheen-tint) 50%,
+      transparent 70%,
+      transparent 100%
+    );
+    transform: translateX(-180%) skewX(-18deg);
+    animation: btn-sheen-glide var(--btn-sheen-speed, 4.5s) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+  /* Disabled Send: freeze + hide the sheen so the button reads clearly inert. */
+  .btn-sheen:disabled::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  /* Magnetic arrow for Send. Markup: Send <span class="btn-send-arrow" aria-hidden="true">→</span> */
+  .btn-send-arrow {
+    display: inline-block;
+    margin-inline-start: 0.35em;
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .group:hover .btn-send-arrow {
+    transform: translateX(3px);
+  }
+  .group:active .btn-send-arrow {
+    transform: translateX(1px);
+  }
+
+  /* Dusty-rose status dot for Stop. Markup: <span class="btn-stop-dot" aria-hidden="true"></span> Stop */
+  .btn-stop-dot {
+    position: relative;
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    background-color: #b7707f;
+    box-shadow: 0 0 6px 0 rgba(183, 112, 127, 0.7);
+  }
+  .btn-stop-dot::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: #b7707f;
+    animation: btn-stop-ping 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+}
+
+/* Respect reduced-motion: kill every looping/transitional button treatment. */
+@media (prefers-reduced-motion: reduce) {
+  .btn-send-breathe,
+  .btn-sheen::after,
+  .btn-stop-dot::after {
+    animation: none !important;
+  }
+  .btn-sheen::after {
+    opacity: 0;
+  }
+  .btn-send-arrow {
+    transition: none !important;
+  }
+  .group:hover .btn-send-arrow,
+  .group:active .btn-send-arrow {
+    transform: none !important;
+  }
+}
