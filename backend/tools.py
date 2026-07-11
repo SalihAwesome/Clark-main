@@ -114,11 +114,14 @@ def open_page(session: BrowserSession, url: str) -> dict[str, Any]:
     low = url.lower()
     # arXiv pages return minimal text (blocked by Cloudflare / LaTeX stripped).
     # Redirect the model to use the dedicated arxiv_search tool instead.
-    m = re.search(r"(?:arxiv\.org/(?:abs|pdf|html)/(\d+\.\d+))", low)
+    # Handles both new-style IDs (2401.12345, 2401.12345v2)
+    # and old-style category IDs (quant-ph/0501001).
+    m = re.search(r"arxiv\.org/(?:abs|pdf|html)/([\w.-]+(?:/[\w.-]+)?)", low)
     if m:
-        paper_id = m.group(1)
+        paper_id = re.sub(r"\.pdf$", "", m.group(1), flags=re.IGNORECASE)
         return {"error": f"arXiv pages are not accessible via the browser (they are blocked/truncated). "
-                         f"Use arxiv_search(paper_id='{paper_id}') instead to get the full abstract."}
+                         f"Use arxiv_search(paper_id='{paper_id}') instead to get the full abstract "
+                         f"(PDF content is not available via browser)."}
     return session.navigate(url)
 
 

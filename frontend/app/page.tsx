@@ -23,11 +23,11 @@ type QuickAction = { label: string; text: string };
 // AGENT mode — live tasks the agent performs end-to-end (drives the browser, logs in, fills forms).
 const AGENT_ACTIONS: QuickAction[] = [
   { label: "Search", text: "Search for the latest news about artificial intelligence" },
-  { label: "Form", text: "Fill out a demo contact form with sample data" },
+  { label: "Form", text: "Log into the-internet.herokuapp.com/login with username tomsmith and password SuperSecretPassword!" },
   { label: "Research", text: "Find and summarize a research paper on climate change" },
   { label: "Rates", text: "Check the current exchange rate between USD and EUR" },
   { label: "Document", text: "Visit a Wikipedia page and save a summary as a document" },
-  { label: "Registration", text: "Go through a sign-up flow on a demo website" },
+  { label: "Registration", text: "Visit a Wikipedia page about Python and save a summary as a document" },
 ];
 
 // CHAT mode — informational / how-to questions answered with knowledge (no browser actions).

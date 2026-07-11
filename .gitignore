@@ -11,6 +11,9 @@ venv/
 env/
 *.egg-info/
 
+# Runtime server logs
+server_*.txt
+
 # Agent runtime output (created at run time)
 backend/agent_workspace/
 agent_workspace/

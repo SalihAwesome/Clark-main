@@ -1,4 +1,4 @@
-﻿"""
+"""
 A persistent, real browser per agent session, driven by Playwright.
 
 Playwright (vs Selenium) gives us the agent best-practices that modern computer-use
@@ -686,14 +686,25 @@ class BrowserSession:
     def click_mark(self, n: int) -> dict[str, Any]:
         def op(s: "BrowserSession") -> dict[str, Any]:
             sel = f'[data-clark-mark="{int(n)}"]'
-            before = (s._page.url, _safe(lambda: s._page.title()), len(s._page.content() or ""))
+            el_type = _safe(lambda: s._page.locator(sel).first.get_attribute("type") or "", "")
             try:
                 s._page.locator(sel).first.click(timeout=5000)
-            except Exception:  # noqa: BLE001 â€” marks may be stale/missing; re-label once and retry
+            except Exception:  # noqa: BLE001 - marks may be stale/missing; re-label once and retry
                 s._page.evaluate(_ANNOTATE_JS)
                 s._page.locator(sel).first.click(timeout=5000)
             s._settle()
+            # Radio/checkbox clicks don't change URL/title/content-length, so the
+            # generic "changed" heuristic would return false even when the toggle
+            # succeeded - causing the agent to retry and burn its step budget.
+            if el_type in ("radio", "checkbox"):
+                checked = _safe(lambda: s._page.locator(sel).first.is_checked(), False)
+                st = s._annotated_state()
+                st["changed"] = True  # the click itself is the change
+                st["input_toggled"] = el_type
+                st["input_checked"] = bool(checked)
+                return st
             # Re-label so the next step has fresh boxes (the page may have changed).
+            before = (s._page.url, _safe(lambda: s._page.title()), len(s._page.content() or ""))
             st = s._annotated_state()
             after = (st.get("url"), st.get("title"), len(_safe(lambda: s._page.content(), "")))
             st["changed"] = (before[0] != after[0]) or (before[1] != after[1]) or abs(before[2] - after[2]) > 400
@@ -2709,3 +2720,4 @@ def close_session(session_id: str) -> bool:
         sess.close()
         return True
     return False
+

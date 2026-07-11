@@ -27,7 +27,7 @@ import tools as tools_mod
 from llm_client import LLMClient, LLMError
 
 
-MAX_STEPS = 16
+MAX_STEPS = 28
 
 
 def _shortdesc(d: str) -> str:
@@ -52,8 +52,9 @@ RULES:
 3. If "blocked" or "truncated" appears, move on immediately with what you have.
 4. Forms/registration: navigate → see_page → fill marks → submit. Use demoqa.com/automation-practice-form for testing forms, or the-internet.herokuapp.com/login for login forms. Use pause_for_user for CAPTCHA.
 5. Research papers: arxiv_search(paper_id=...) returns the full abstract. Wikipedia: open_page → see_page → read → save_document().
-6. Near step 14/16: deliver a partial final_answer with whatever you have.
-7. NEVER output prose, markdown, or thinking — only JSON.
+6. Do what the user asks. If they ask you to "save a document" or "save a summary as a document", call save_document(filename, content). Do NOT ask "what would you like me to do next" — just do it. Do NOT inline-summarize without calling the tool.
+7. Near step {MAX_STEPS-2}/{MAX_STEPS}: deliver a partial final_answer with whatever you have.
+8. NEVER output prose, markdown, or thinking — only JSON. Do NOT have a conversation. Do NOT ask the user what to do next.
 
 Tools:
 {tool_lines}
@@ -319,9 +320,9 @@ class AgentRun:
             self._compact()
 
             # Force the model to hand in a final answer near the step limit.
-            if self.steps == 15:
+            if self.steps == MAX_STEPS - 1:
                 self.messages.append({"role": "user", "content":
-                    "[LIMIT] Step 15/16 — you MUST stop and deliver a JSON final_answer NOW:\n"
+                    f"[LIMIT] Step {self.steps}/{MAX_STEPS} — you MUST stop and deliver a JSON final_answer NOW:\n"
                     "{\"thought\":\"...\",\"final_answer\":\"what I found or what went wrong\"}\n"
                     "No more tool calls. A partial answer is better than silence."})
 
@@ -371,10 +372,10 @@ class AgentRun:
                 return
 
             # Near step limit: force final answer instead of dispatching more tools.
-            if self.steps >= 15 and "final_answer" not in decision:
+            if self.steps >= MAX_STEPS - 1 and "final_answer" not in decision:
                 self.messages.append({"role": "assistant", "content": json.dumps(decision, ensure_ascii=False)})
                 self.messages.append({"role": "user", "content":
-                    "[LIMIT] No more tool calls — you are at 15/16. "
+                    f"[LIMIT] No more tool calls — you are at {self.steps}/{MAX_STEPS}. "
                     "JSON final_answer NOW:\n"
                     "{\"thought\":\"...\",\"final_answer\":\"what I found or what went wrong\"}"})
                 # Give the model one more inference to produce a final answer
@@ -501,14 +502,14 @@ class AgentRun:
 
     def _stream_smalltalk(self) -> Iterator[dict[str, Any]]:
         """Answer a greeting / small-talk directly, no tool loop."""
-        system = "You are Clark, a helpful autonomous web agent. Greet the user warmly and ask what web task they'd like help with."
+        system = "You are Clark, a helpful autonomous web agent. Greet the user warmly."
         try:
             answer = self.client.chat(
                 [{"role": "system", "content": system},
                  {"role": "user", "content": self._last_user}],
                 temperature=0.5, max_tokens=200)
         except LLMError:
-            answer = "Hi! I'm Clark, your web agent. What can I help you with today?"
+            answer = "Hi! I'm Clark, your web agent. I'm ready when you are."
         yield {"type": "delta", "content": answer}
         yield {"type": "final", "content": answer}
 
