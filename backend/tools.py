@@ -111,6 +111,14 @@ def arxiv_search(query: str = "", paper_id: str = "", max_results: int = 3) -> d
 # --------------------------------------------------------------------------- #
 def open_page(session: BrowserSession, url: str) -> dict[str, Any]:
     """Navigate the real browser to a URL and return the page state + screenshot."""
+    low = url.lower()
+    # arXiv pages return minimal text (blocked by Cloudflare / LaTeX stripped).
+    # Redirect the model to use the dedicated arxiv_search tool instead.
+    m = re.search(r"(?:arxiv\.org/(?:abs|pdf|html)/(\d+\.\d+))", low)
+    if m:
+        paper_id = m.group(1)
+        return {"error": f"arXiv pages are not accessible via the browser (they are blocked/truncated). "
+                         f"Use arxiv_search(paper_id='{paper_id}') instead to get the full abstract."}
     return session.navigate(url)
 
 
