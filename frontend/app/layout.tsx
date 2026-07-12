@@ -21,10 +21,13 @@ const nunito = Nunito({
 const MeshBackground = dynamic(() => import("@/components/ui/MeshBackground"), { ssr: false });
 
 export const metadata: Metadata = {
-  icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
+  icons: [
+    { rel: "icon", url: "/favicon.svg", type: "image/svg+xml" },
+    { rel: "apple-touch-icon", url: "/logo.png" },
+  ],
   title: "Clark — General-purpose Web Agent",
   description:
-    "An autonomous web agent that drives a real browser: searches, fills forms, logs in, extracts data, and saves documents — powered by Gemini AI.",
+    "An autonomous web agent that drives a real browser: searches, fills forms, logs in, extracts data, and saves documents — powered by AI.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

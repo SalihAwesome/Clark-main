@@ -1,38 +1,75 @@
-# Secrets
+# ── Secrets & configuration ──────────────────────────────────────────
 .env
 *.env
 !.env.example
+backend/.env
 
-# Python
+# ── Python ──────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 .venv/
 venv/
 env/
 *.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Runtime server logs
-server_*.txt
-
-# Agent runtime output (created at run time)
-backend/agent_workspace/
-agent_workspace/
-
-
-# Node / Next.js
+# ── Node / Next.js ─────────────────────────────────────────────────
 node_modules/
 .next/
 out/
 npm-debug.log*
 yarn-error.log*
+pnpm-lock.yaml
 
-# Editor / OS
+# ── Docker ──────────────────────────────────────────────────────────
+.dockerignore
+
+# ── Agent runtime output (created at run time) ──────────────────────
+backend/agent_workspace/
+agent_workspace/
+
+# ── Runtime server logs ────────────────────────────────────────────
+server_*.txt
+*.log
+
+# ── Start scripts (local convenience only) ─────────────────────────
+START.bat
+start-chrome-debug.bat
+scripts/
+
+# ── Design / build artifacts ───────────────────────────────────────
+clark-hackathon-deck.html
+docs/superpowers/specs/
+DESIGN.md
+PRODUCT.md
+
+# ── Test / debug screenshots ───────────────────────────────────────
+dark-mode-fullpage.png
+dark-viewport.jpeg
+
+# ── Personal tool configs ──────────────────────────────────────────
+.claude/
+.impeccable/
+.playwright-mcp/
+
+# ── Skyvern temp data ──────────────────────────────────────────────
+skyvern/temp/
+skyvern/*.session_cookies.json
+
+# ── Editor / OS files ──────────────────────────────────────────────
 .history/
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 .DS_Store
 Thumbs.db
+desktop.ini
 
-START.bat
-scripts/
-start-chrome-debug.bat
+# ── UI test snapshots ──────────────────────────────────────────────
+frontend/tests/
+frontend/test-results/
+frontend/playwright-report/

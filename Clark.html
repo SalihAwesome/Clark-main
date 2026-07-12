@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clark — AMD Developer Hackathon · ACT II — Unicorn Track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ Reset ============ */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  img,svg{display:block;max-width:100%}
+  button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}
+  a{color:inherit}
+  ul,ol{list-style:none}
+
+  /* ============ Design tokens — Clark "Clay & Cotton" ============ */
+  :root{
+    --bg:#F7F4EE; --surface:#EFE8DE; --surface-raised:#E0D6C8;
+    --primary:#C96A4D; --primary-deep:#B05439; --primary-subtle:#F5E4DC;
+    --accent:#3B8E8C; --accent-deep:#2E7371; --accent-subtle:#D6EDEC;
+    --cta:#D4973A; --cta-subtle:#F5E8D0;
+    --ink:#2C2826; --ink-subtle:#7A7069;
+    --line:rgba(44,40,38,0.12); --line-strong:rgba(44,40,38,0.22);
+    --negative:#C4554A; --positive:#5C8C6E;
+    --shadow-soft:0 2px 8px rgba(44,40,38,0.06);
+    --shadow-raised:0 8px 28px rgba(44,40,38,0.10), 0 2px 8px rgba(44,40,38,0.07);
+    --font-display:'Nunito',system-ui,sans-serif;
+    --font-body:'Inter',system-ui,sans-serif;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1C1816; --surface:#2B2521; --surface-raised:#3C3430;
+      --primary-subtle:#3a2a24; --accent-subtle:#20302f; --cta-subtle:#3a301c;
+      --ink:#ECE6E0; --ink-subtle:#B0A69E;
+      --line:rgba(236,230,224,0.12); --line-strong:rgba(236,230,224,0.22);
+      --shadow-soft:0 2px 10px rgba(0,0,0,0.35);
+      --shadow-raised:0 10px 32px rgba(0,0,0,0.45), 0 2px 10px rgba(0,0,0,0.35);
+    }
+  }
+
+  body{
+    background:var(--bg); color:var(--ink); font-family:var(--font-body);
+    font-size:15px; line-height:1.6; overflow:hidden;
+  }
+
+  /* Ambient warm blobs, quiet, like the product background */
+  .ambient{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden}
+  .ambient span{position:absolute; border-radius:999px; filter:blur(70px)}
+  .ambient span:nth-child(1){width:38vw;height:38vw;left:-8vw;top:-10vw;background:rgba(201,106,77,.10)}
+  .ambient span:nth-child(2){width:30vw;height:30vw;right:-6vw;bottom:-8vw;background:rgba(59,142,140,.09)}
+  .ambient span:nth-child(3){width:22vw;height:22vw;right:18vw;top:12vw;background:rgba(212,151,58,.06)}
+
+  /* ============ Type scale ============ */
+  .eyebrow{
+    font-family:var(--font-body); font-weight:700; font-size:11px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow .num{
+    font-family:var(--font-display); font-weight:900; font-size:15px; letter-spacing:0;
+    color:var(--ink); background:var(--surface-raised); border-radius:8px; padding:2px 8px;
+  }
+  h1.display{
+    font-family:var(--font-display); font-weight:800; letter-spacing:-0.02em; line-height:1.02;
+    font-size:clamp(2.4rem, 5.6vw, 5.2rem); text-wrap:balance;
+  }
+  h2.headline{
+    font-family:var(--font-display); font-weight:800; letter-spacing:-0.015em; line-height:1.08;
+    font-size:clamp(1.7rem, 3.4vw, 2.9rem); text-wrap:balance;
+  }
+  h3.title{ font-family:var(--font-body); font-weight:700; font-size:1.05rem; letter-spacing:-0.005em }
+  p.lede{ font-size:clamp(.95rem,1.25vw,1.15rem); color:var(--ink-subtle); line-height:1.65; max-width:62ch }
+  .accent-word{ color:var(--primary) }
+  .accent-word.teal{ color:var(--accent) }
+
+  /* ============ Layout shell ============ */
+  .deck{ position:relative; width:100vw; height:100vh; z-index:1 }
+  .slide{
+    position:absolute; inset:0; display:none; flex-direction:column;
+    padding: clamp(28px,4.4vw,72px) clamp(28px,6.4vw,110px);
+    opacity:0; transform:translateY(14px); transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+    overflow-y:auto;
+  }
+  .slide.active{ display:flex; opacity:1; transform:translateY(0) }
+  .slide-inner{ margin:auto 0; width:100%; max-width:1180px; align-self:center }
+  .slide-head{ display:flex; flex-direction:column; gap:14px; margin-bottom:clamp(20px,3vw,40px) }
+
+  /* Big faded numeral behind the eyebrow row — Clark's own "massive numerals" signature */
+  .num-ghost{
+    position:absolute; font-family:var(--font-display); font-weight:900;
+    font-size:clamp(7rem,18vw,15rem); line-height:1; color:var(--ink);
+    opacity:.045; right:clamp(10px,3vw,40px); top:clamp(0px,1vw,10px); z-index:0; pointer-events:none;
+    user-select:none;
+  }
+
+  /* ============ Reusable components ============ */
+  .grid{ display:grid; gap:clamp(14px,1.6vw,22px) }
+  .grid-2{ grid-template-columns:repeat(2,1fr) }
+  .grid-3{ grid-template-columns:repeat(3,1fr) }
+  .grid-4{ grid-template-columns:repeat(4,1fr) }
+
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:clamp(16px,1.8vw,24px); transition:box-shadow .25s cubic-bezier(.16,1,.3,1), transform .25s cubic-bezier(.16,1,.3,1);
+  }
+  .card:hover{ box-shadow:var(--shadow-soft); transform:translateY(-2px) }
+  .card .k{ font-family:var(--font-body); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:.14em; color:var(--primary); margin-bottom:8px; display:block }
+  .card p{ color:var(--ink-subtle); font-size:.92rem; line-height:1.55 }
+  .card.on-accent{ background:var(--accent-subtle); border-color:transparent }
+  .card.on-primary{ background:var(--primary-subtle); border-color:transparent }
+  .card.on-cta{ background:var(--cta-subtle); border-color:transparent }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line-strong);
+    border-radius:999px; padding:6px 14px; font-size:11px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.12em; color:var(--ink-subtle);
+  }
+  .dot{ width:6px;height:6px;border-radius:999px;background:var(--accent); flex-shrink:0 }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; border-radius:999px; padding:12px 26px;
+    font-weight:700; font-size:.85rem; text-transform:uppercase; letter-spacing:.04em;
+    transition:transform .2s cubic-bezier(.16,1,.3,1), opacity .2s;
+  }
+  .btn:hover{ transform:translateY(-1px) }
+  .btn-primary{ background:var(--accent); color:#fff; box-shadow:0 2px 10px -2px rgba(59,142,140,.45) }
+  .btn-ghost{ border:1.5px solid var(--line-strong); color:var(--ink) }
+  .btn-cta{ background:var(--cta); color:#241c0e }
+
+  hr.rule{ border:0; border-top:1px solid var(--line); margin:18px 0 }
+
+  /* Marquee ticker — lifted straight from the product UI */
+  .marquee-wrap{ overflow:hidden; border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:rgba(239,232,222,.5) }
+  @media (prefers-color-scheme: dark){ .marquee-wrap{ background:rgba(43,37,33,.5) } }
+  .marquee-track{ display:flex; width:max-content; animation:marquee 26s linear infinite }
+  .marquee-track span.item{
+    display:flex; align-items:center; gap:16px; padding:10px 22px; font-size:11px; font-weight:700;
+    text-transform:uppercase; letter-spacing:.2em; color:var(--ink-subtle); white-space:nowrap;
+  }
+  .marquee-track span.item i{ color:var(--primary); font-style:normal }
+  @keyframes marquee{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ============ Diagram primitives (System / AI architecture) ============ */
+  .flow{ display:flex; align-items:stretch; gap:10px; flex-wrap:wrap }
+  .flow-col{ display:flex; flex-direction:column; gap:10px; flex:1; min-width:200px }
+  .box{
+    border:1.5px solid var(--line-strong); border-radius:14px; padding:14px 16px; background:var(--surface);
+  }
+  .box .box-k{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.14em; color:var(--accent); margin-bottom:6px; display:block }
+  .box .box-t{ font-weight:700; font-size:.94rem; margin-bottom:4px }
+  .box .box-d{ font-size:.82rem; color:var(--ink-subtle); line-height:1.5 }
+  .box.accent{ border-color:var(--accent); background:var(--accent-subtle) }
+  .box.primary{ border-color:var(--primary); background:var(--primary-subtle) }
+  .box.amd{ border-color:#c0392f; background:#fdece9 }
+  @media (prefers-color-scheme: dark){ .box.amd{ background:#3a201d } }
+  .arrow-h{ display:flex; align-items:center; justify-content:center; color:var(--ink-subtle); font-size:1.3rem; padding:0 4px }
+  .arrow-v{ display:flex; align-items:center; justify-content:center; color:var(--ink-subtle); font-size:1.3rem; padding:6px 0 }
+
+  /* ============ Slide-specific: hero ============ */
+  #slide-1 .hero-top{ display:flex; align-items:center; gap:12px; margin-bottom:26px }
+  .wordmark{ font-family:var(--font-body); font-weight:800; font-size:1.15rem; text-transform:uppercase; letter-spacing:-.01em }
+  .wordmark b{ color:var(--primary); font-weight:800 }
+  .wordmark small{ display:block; font-size:9px; font-weight:700; letter-spacing:.3em; color:var(--ink-subtle); text-transform:uppercase }
+  #slide-1 .cta-row{ display:flex; gap:12px; flex-wrap:wrap; margin-top:28px }
+  #slide-1 .tagline{ margin-top:16px }
+
+  /* ============ Slide 5: demo mock UI ============ */
+  .mock{ display:grid; grid-template-columns:1.15fr .85fr; gap:18px }
+  .mock-chat{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:12px }
+  .mock-bubble-user{ align-self:flex-end; background:var(--accent-subtle); border:1px solid var(--line); border-radius:14px; padding:9px 14px; font-size:.85rem; max-width:80% }
+  .mock-step{ display:flex; align-items:flex-start; gap:10px }
+  .mock-step .n{ font-family:var(--font-display); font-weight:900; font-size:1.5rem; color:var(--ink); opacity:.25; width:32px; text-align:right; flex-shrink:0 }
+  .mock-step .body{ border-left:2px solid var(--accent); padding-left:10px; flex:1 }
+  .mock-step .tool{ font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:var(--accent) }
+  .mock-step .detail{ font-size:.8rem; color:var(--ink-subtle) }
+  .mock-preview{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:12px; display:flex; flex-direction:column; gap:10px }
+  .mock-preview .frame{ background:var(--surface-raised); border-radius:10px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-subtle); font-size:.75rem; text-transform:uppercase; letter-spacing:.12em; text-align:center; padding:10px }
+  .mock-preview .status{ display:flex; align-items:center; gap:8px; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-subtle) }
+  .mock-preview .live{ width:7px;height:7px;border-radius:999px;background:var(--positive) }
+  .results-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:18px }
+
+/* Video embed */
+.video-embed{ position:relative; width:100%; max-width:720px; margin:0 auto; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-soft); border:1px solid var(--line); background:var(--surface); cursor:pointer }
+.video-embed a{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:60px 20px; text-decoration:none; transition:background .25s }
+.video-embed a:hover{ background:var(--surface-raised) }
+.video-embed .play-icon{ width:64px; height:64px; border-radius:999px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-size:1.6rem; color:#fff; transition:transform .2s, box-shadow .2s; box-shadow:0 4px 20px rgba(201,106,77,.35) }
+.video-embed a:hover .play-icon{ transform:scale(1.08); box-shadow:0 6px 28px rgba(201,106,77,.45) }
+.video-embed .video-label{ font-size:.95rem; font-weight:700; color:var(--ink); letter-spacing:-.01em }
+.video-embed .video-sub{ font-size:.78rem; color:var(--ink-subtle); margin-top:-6px }
+
+  /* ============ Nav controls ============ */
+  .progress{ position:fixed; top:0; left:0; height:3px; background:var(--accent); z-index:30; transition:width .4s cubic-bezier(.16,1,.3,1) }
+  .navbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:30; display:flex; align-items:center; justify-content:space-between;
+    padding:14px clamp(16px,3vw,40px); pointer-events:none;
+  }
+  .navbar > *{ pointer-events:auto }
+  .dots{ display:flex; gap:8px }
+  .dots button{ width:8px;height:8px;border-radius:999px; background:var(--line-strong); transition:all .25s cubic-bezier(.16,1,.3,1) }
+  .dots button.active{ width:22px; background:var(--accent) }
+  .nav-controls{ display:flex; align-items:center; gap:14px }
+  .nav-btn{
+    width:42px;height:42px;border-radius:999px; border:1.5px solid var(--line-strong); display:flex;
+    align-items:center; justify-content:center; background:var(--surface); transition:border-color .2s, transform .15s;
+  }
+  .nav-btn:hover{ border-color:var(--accent); color:var(--accent) }
+  .nav-btn:active{ transform:scale(.94) }
+  .nav-btn:disabled{ opacity:.35; cursor:default }
+  .counter{ font-family:var(--font-display); font-weight:900; font-size:1rem; min-width:64px; text-align:center }
+  .counter .cur{ color:var(--primary) }
+  .counter .of{ color:var(--ink-subtle); font-weight:700 }
+  .hint{
+    position:fixed; top:16px; right:clamp(16px,3vw,40px); z-index:30; font-size:10px; font-weight:700;
+    text-transform:uppercase; letter-spacing:.14em; color:var(--ink-subtle); display:flex; align-items:center; gap:6px;
+  }
+  .hint kbd{ border:1px solid var(--line-strong); border-radius:5px; padding:1px 6px; font-family:var(--font-body) }
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:6px }
+
+  /* ============ Responsive ============ */
+  @media (max-width: 880px){
+    body{ overflow-y:auto; overflow-x:hidden }
+    .grid-2,.grid-3,.grid-4{ grid-template-columns:1fr }
+    .mock{ grid-template-columns:1fr }
+    .flow{ flex-direction:column }
+    .navbar{ padding-bottom:10px }
+    .hint{ display:none }
+    .num-ghost{ display:none }
+  }
+
+  /* ============ Reduced motion ============ */
+  @media (prefers-reduced-motion: reduce){
+    .slide{ transition:none }
+    .marquee-track{ animation:none }
+    .dots button{ transition:none }
+  }
+
+  /* ============ Print (export to PDF) ============ */
+  @media print{
+    body{ overflow:visible }
+    .progress,.navbar,.hint,.ambient{ display:none !important }
+    .slide{
+      position:relative; display:flex !important; opacity:1 !important; transform:none !important;
+      page-break-after:always; height:100vh; overflow:visible;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="progress" id="progress"></div>
+<div class="hint"><kbd>&larr;</kbd><kbd>&rarr;</kbd> to navigate</div>
+
+<main class="deck" id="deck">
+
+  <!-- ============ 1. TITLE ============ -->
+  <section class="slide active" id="slide-1">
+    <div class="slide-inner">
+      <div class="hero-top">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23F7F4EE'/%3E%3Ccircle cx='50' cy='50' r='32' stroke='%23C96A4D' stroke-width='6' fill='none'/%3E%3Cpath d='M32 50h36' stroke='%23C96A4D' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M32 38h28M32 62h28' stroke='%23C96A4D' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E" alt="Clark" width="46" height="46" style="border-radius:14px; box-shadow:var(--shadow-soft)">
+        <div class="wordmark">Cl<b>ark</b><small>Web Agent</small></div>
+      </div>
+
+      <div class="pill" style="margin-bottom:18px">
+        <span class="dot"></span> AMD Developer Hackathon · ACT II — Unicorn Track
+      </div>
+
+      <h1 class="display">Not a chatbot.<br>An agent that <span class="accent-word teal">actually does things.</span></h1>
+
+      <p class="lede tagline">Clark opens a real browser, reasons step by step, and finishes the web task you gave it — searching, filling forms, signing in, and reporting back — while you stay in control of anything sensitive.</p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://www.youtube.com/watch?v=B8gECkX9J-k" target="_blank" rel="noopener" title="Watch the demo video">▶ Live Demo</a>
+        <a class="btn btn-ghost" href="https://github.com/SalihAwesome/Clark-main" target="_blank" rel="noopener">↗ GitHub Repository</a>
+      </div>
+    </div>
+
+    <div class="marquee-wrap" style="margin-top:auto">
+      <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
+  </section>
+
+  <!-- ============ 2. THE PROBLEM ============ -->
+  <section class="slide" id="slide-2">
+    <span class="num-ghost">01</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">01</span> The Problem</div>
+        <h2 class="headline">The web still makes <span class="accent-word">you</span> do the clicking.</h2>
+        <p class="lede">Most "web work" isn't hard — it's mechanical. AI chat can describe a task; it still can't open the page and finish it.</p>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <span class="k">Who's affected</span>
+          <p>Students and researchers pulling facts from many pages, professionals filing recurring paperwork, and anyone navigating dense, multi-step e-service portals that punish a single mistake.</p>
+        </div>
+        <div class="card">
+          <span class="k">Why it matters</span>
+          <p>Every manual, repetitive browser session is time not spent on the task the person actually cares about — and friction in bureaucratic workflows is friction in access to services.</p>
+        </div>
+        <div class="card">
+          <span class="k">Current pain points</span>
+          <p>Constant context-switching, unfamiliar UI patterns, logins/OTPs/CAPTCHAs that block naive automation, and no memory of what was typed in five minutes ago on a different site.</p>
+        </div>
+        <div class="card on-primary">
+          <span class="k">The gap</span>
+          <p>Chat can talk about the renewal form. It has never once opened it, read the fields, and filled them in for you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. CURRENT SOLUTIONS ============ -->
+  <section class="slide" id="slide-3">
+    <span class="num-ghost">02</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">02</span> Current Solutions</div>
+        <h2 class="headline">Chatbots talk. Scripts break. <span class="accent-word">Neither finishes the job.</span></h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card">
+          <span class="k">Plain chatbots</span>
+          <p><b>Limitation:</b> no hands. They can explain a process in detail and still leave the actual clicking to you.</p>
+        </div>
+        <div class="card">
+          <span class="k">RPA / macro tools</span>
+          <p><b>Limitation:</b> hard-coded, per-site scripts. One redesign and the whole automation silently breaks.</p>
+        </div>
+        <div class="card">
+          <span class="k">Narrow browser copilots</span>
+          <p><b>Limitation:</b> reason about a single visible tab with no real multi-step planning, and no safe handling of logins or payments.</p>
+        </div>
+      </div>
+      <hr class="rule">
+      <div class="card on-accent">
+        <span class="k">The opportunity</span>
+        <p style="color:var(--ink)">A general-purpose agent that reasons about <b>any</b> page it lands on — no site-specific script to write or maintain — and treats anything sensitive as a hard stop for a human.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. OUR SOLUTION ============ -->
+  <section class="slide" id="slide-4">
+    <span class="num-ghost">03</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">03</span> Our Solution</div>
+        <h2 class="headline">One general-purpose agent. <span class="accent-word teal">Any website.</span></h2>
+        <p class="lede">Clark pairs a real, visible browser with an LLM reasoning loop (think → act → observe → repeat), so it operates sites it has never seen — not a fixed list of ones it was scripted for.</p>
+      </div>
+      <div class="grid grid-4">
+        <div class="card">
+          <span class="k">No fixed registry</span>
+          <p>Nothing to hard-code per site. The agent reasons about whatever page is actually in front of it.</p>
+        </div>
+        <div class="card">
+          <span class="k">Grounded clicking</span>
+          <p>A numbered Set-of-Marks overlay lets it click "box #14" instead of a selector a redesign can break.</p>
+        </div>
+        <div class="card">
+          <span class="k">Human-in-the-loop</span>
+          <p>Structurally unable to type a password, OTP, or full card number itself — by design, not policy.</p>
+        </div>
+        <div class="card">
+          <span class="k">Grounded answers</span>
+          <p>The final answer is re-derived from what it actually clicked and typed, not from what the model recalls.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. LIVE DEMO ============ -->
+  <section class="slide" id="slide-5">
+    <span class="num-ghost">04</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">04</span> Live Demo</div>
+        <h2 class="headline">Watch it think, act, and <span class="accent-word">hand back control.</span></h2>
+      </div>
+      <div class="video-embed">
+        <a href="https://www.youtube.com/watch?v=B8gECkX9J-k" target="_blank" rel="noopener" title="Watch Clark demo on YouTube">
+          <div class="play-icon">▶</div>
+          <div class="video-label">Watch the Demo on YouTube</div>
+          <div class="video-sub">Opens in a new tab · 720p</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. SYSTEM ARCHITECTURE ============ -->
+  <section class="slide" id="slide-6">
+    <span class="num-ghost">05</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">05</span> System Architecture</div>
+        <h2 class="headline">Frontend streams. Backend reasons. <span class="accent-word teal">A real browser acts.</span></h2>
+      </div>
+      <div class="flow">
+        <div class="flow-col">
+          <div class="box"><span class="box-k">Frontend · Next.js 14</span><div class="box-t">Chat &amp; Agent surface</div><div class="box-d">Live trace, live preview, human-in-the-loop modals</div></div>
+        </div>
+        <div class="arrow-h">⇄ SSE</div>
+        <div class="flow-col">
+          <div class="box accent"><span class="box-k">Backend · FastAPI :8008</span><div class="box-t">AgentRun — ReAct loop</div><div class="box-d">Tool layer + local memory (profile, credentials, payment, audit)</div></div>
+        </div>
+        <div class="arrow-h">→</div>
+        <div class="flow-col">
+          <div class="box amd"><span class="box-k">AI Inference</span><div class="box-t">Fireworks (primary, AMD Instinct)</div><div class="box-d">Google Gemma 4 — automatic fallback</div></div>
+          <div class="box primary"><span class="box-k">Real World</span><div class="box-t">Playwright · Chromium</div><div class="box-d">Any website, numbered &amp; grounded</div></div>
+        </div>
+      </div>
+      <p class="lede" style="margin-top:18px">Each agent session owns a dedicated worker thread holding one live browser — Playwright's sync API is thread-bound, and the browser must survive across several requests while a human completes a login.</p>
+    </div>
+  </section>
+
+  <!-- ============ 7. AI ARCHITECTURE ============ -->
+  <section class="slide" id="slide-7">
+    <span class="num-ghost">06</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">06</span> AI Architecture</div>
+        <h2 class="headline">Think → Act → Observe. <span class="accent-word">Repeat.</span></h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card"><span class="k">Pipeline</span><p>One JSON object per turn — a tool call or a final answer — parsed with a brace-matching fallback that tolerates stray text.</p></div>
+        <div class="card"><span class="k">Models</span><p>Fireworks AI (DeepSeek-class, primary, AMD-accelerated) + Google Gemma 4 (multimodal, automatic fallback).</p></div>
+        <div class="card"><span class="k">Agent</span><p>A single orchestrator (AgentRun) dispatches ~20 tools against a live, per-session browser worker.</p></div>
+        <div class="card"><span class="k">Memory</span><p>Local "My Info" profile (incl. ID-photo OCR), saved credentials, saved payment card, full replayable audit trail.</p></div>
+        <div class="card"><span class="k">Tool usage</span><p>Search, Set-of-Marks click/fill, smart date &amp; text filling, login, submit, document generation.</p></div>
+        <div class="card"><span class="k">Decision flow</span><p>Near the step budget, the loop forces a wrap-up; the final answer is re-derived from actual tool-call arguments.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. AMD TECHNOLOGIES ============ -->
+  <section class="slide" id="slide-8">
+    <span class="num-ghost">07</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">07</span> AMD Technologies</div>
+        <h2 class="headline">Every primary inference call runs on <span class="accent-word">AMD Instinct.</span></h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card on-primary">
+          <span class="k">AMD Services Used</span>
+          <p>Clark's <b>primary</b> LLM path — every reasoning step, tool choice, and vision/OCR call through Fireworks AI — runs on AMD Instinct™ (MI300X / MI325X / MI355X-class) GPUs via Fireworks' FireAttention inference stack and the open ROCm™ ecosystem.</p>
+        </div>
+        <div class="card">
+          <span class="k">Why AMD</span>
+          <p>High-memory accelerators give headroom for DeepSeek-class models at the longer contexts an agentic loop needs, and ROCm's open stack keeps the inference layer vendor-neutral.</p>
+        </div>
+        <div class="card">
+          <span class="k">Performance Benefits</span>
+          <p>Per Fireworks' published FireAttention V3 benchmarks on AMD Instinct MI300 GPUs: up to <b>1.4×–1.8×</b> throughput vs. comparable inference stacks — the same serving path behind Clark's step loop.</p>
+        </div>
+      </div>
+      <div class="results-row">
+        <span class="pill">AMD Instinct™ MI300X / MI325X / MI355X</span>
+        <span class="pill">ROCm™ open software stack</span>
+        <span class="pill">FireAttention V3 (Fireworks AI)</span>
+      </div>
+      <p class="lede" style="margin-top:14px; font-size:.8rem">Figures are Fireworks/AMD's published benchmarks for their inference stack, not independent measurements — add your own end-to-end step-latency numbers if you benchmark Clark directly.</p>
+    </div>
+  </section>
+
+  <!-- ============ 9. INNOVATION ============ -->
+  <section class="slide" id="slide-9">
+    <span class="num-ghost">08</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">08</span> Innovation</div>
+        <h2 class="headline">What makes Clark <span class="accent-word teal">hard to copy.</span></h2>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <span class="k">Technical innovations</span>
+          <p>Set-of-Marks grounded clicking, grounded-final-answer re-derivation from real tool calls, stealth-aware persistent browser sessions, and a per-provider circuit breaker with fast-fail timeouts.</p>
+        </div>
+        <div class="card">
+          <span class="k">Competitive advantage</span>
+          <p>No site-specific scripts to write or maintain. A transparent, replayable step trace. Safety that's structural — the model literally cannot type a credential itself.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10. BUSINESS POTENTIAL ============ -->
+  <section class="slide" id="slide-10">
+    <span class="num-ghost">09</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">09</span> Business Potential</div>
+        <h2 class="headline">From a personal agent to a <span class="accent-word">platform.</span></h2>
+      </div>
+      <div class="grid grid-2">
+        <div class="card"><span class="k">Target users</span><p>Consumers with recurring web chores, researchers, professionals with paperwork — and, longer-term, teams with high-volume, form-heavy workflows.</p></div>
+        <div class="card"><span class="k">Market opportunity</span><p>Browser automation is shifting from brittle per-site RPA toward general-purpose, LLM-driven agents — riding the broader agentic-AI adoption curve.</p></div>
+        <div class="card"><span class="k">Revenue model</span><p>Freemium local-first core → hosted/Pro tier → usage-based API → enterprise (shared vaults, SSO, compliance exports).</p></div>
+        <div class="card"><span class="k">Scalability</span><p>Stateless API + per-session browser workers scale horizontally; AMD-backed inference gives real cost/throughput headroom as usage grows.</p></div>
+      </div>
+      <div class="grid grid-3" style="margin-top:18px">
+        <div class="card on-cta"><span class="k">TAM</span><p style="color:var(--ink)">Add your researched figure</p></div>
+        <div class="card on-cta"><span class="k">SAM</span><p style="color:var(--ink)">Add your researched figure</p></div>
+        <div class="card on-cta"><span class="k">SOM</span><p style="color:var(--ink)">Add your researched figure</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11. ROADMAP ============ -->
+  <section class="slide" id="slide-11">
+    <span class="num-ghost">10</span>
+    <div class="slide-inner">
+      <div class="slide-head">
+        <div class="eyebrow"><span class="num">10</span> Roadmap</div>
+        <h2 class="headline">What's <span class="accent-word teal">next.</span></h2>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <span class="k">Short-term</span>
+          <p>Remove the fixed task registry for full general-purpose reasoning · unify the CLI/web execution paths · comprehensive PII redaction &amp; SSRF blocking · universal CAPTCHA detection · wider action vocabulary · Docker smoke tests.</p>
+        </div>
+        <div class="card">
+          <span class="k">Long-term</span>
+          <p>Deeper multi-page workflows · more MFA methods · additional LLM providers &amp; a self-hosted ROCm inference tier · structured eval benchmarks · enterprise credential vaults · a mobile companion for approvals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 12. CLOSING ============ -->
+  <section class="slide" id="slide-12">
+    <div class="slide-inner">
+      <div class="pill" style="margin-bottom:18px"><span class="dot"></span> Thank you</div>
+      <h1 class="display">Clark: the web,<br><span class="accent-word teal">done for you.</span></h1>
+      <p class="lede" style="margin-top:16px">General-purpose. Safe by design. Transparent at every step. AMD-accelerated under the hood.</p>
+      <div class="grid grid-2" style="margin-top:30px">
+        <div class="card"><span class="k">Repository</span><p><a href="https://github.com/SalihAwesome/Clark-main" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600">github.com/SalihAwesome/Clark-main ↗</a></p></div>
+        <div class="card"><span class="k">Live Demo</span><p><a href="https://www.youtube.com/watch?v=B8gECkX9J-k" target="_blank" rel="noopener" style="color:var(--accent);font-weight:600">youtube.com ↗</a></p></div>
+      </div>
+    </div>
+    <div class="marquee-wrap" style="margin-top:auto">
+      <div class="marquee-track" id="marqueeTrack2"></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="navbar">
+  <div class="dots" id="dots"></div>
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="counter"><span class="cur" id="curNum">01</span><span class="of">/ 12</span></div>
+    <button class="nav-btn" id="nextBtn" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var CAPS = ["BROWSER CONTROL","FORM FILLING","WEB SEARCH","HUMAN-IN-THE-LOOP","LIVE SCREENSHOTS","MULTI-STEP TASKS","DOCUMENT GENERATION","AMD INSTINCT INFERENCE"];
+  function buildMarquee(el){
+    if(!el) return;
+    var row = CAPS.concat(CAPS);
+    el.innerHTML = row.map(function(t){ return '<span class="item">'+t+' <i>&#10022;</i></span>'; }).join('');
+  }
+  buildMarquee(document.getElementById('marqueeTrack'));
+  buildMarquee(document.getElementById('marqueeTrack2'));
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var idx = 0;
+  var dotsEl = document.getElementById('dots');
+  var curNum = document.getElementById('curNum');
+  var progress = document.getElementById('progress');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+
+  slides.forEach(function(_, i){
+    var b = document.createElement('button');
+    b.setAttribute('aria-label', 'Go to slide ' + (i+1));
+    b.addEventListener('click', function(){ go(i); });
+    dotsEl.appendChild(b);
+  });
+  var dotButtons = Array.prototype.slice.call(dotsEl.children);
+
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+  function render(){
+    slides.forEach(function(s, i){ s.classList.toggle('active', i === idx); });
+    dotButtons.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+    curNum.textContent = pad(idx + 1);
+    progress.style.width = (((idx + 1) / total) * 100) + '%';
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === total - 1;
+    slides[idx].scrollTop = 0;
+  }
+
+  function go(i){
+    idx = Math.max(0, Math.min(total - 1, i));
+    render();
+  }
+
+  prevBtn.addEventListener('click', function(){ go(idx - 1); });
+  nextBtn.addEventListener('click', function(){ go(idx + 1); });
+
+  window.addEventListener('keydown', function(e){
+    if(['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key) > -1){ e.preventDefault(); go(idx + 1); }
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key) > -1){ e.preventDefault(); go(idx - 1); }
+    else if(e.key === 'Home'){ e.preventDefault(); go(0); }
+    else if(e.key === 'End'){ e.preventDefault(); go(total - 1); }
+  });
+
+  // Basic swipe support for touch devices
+  var touchX = null;
+  window.addEventListener('touchstart', function(e){ touchX = e.touches[0].clientX; }, {passive:true});
+  window.addEventListener('touchend', function(e){
+    if(touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 60){ dx < 0 ? go(idx + 1) : go(idx - 1); }
+    touchX = null;
+  }, {passive:true});
+
+  render();
+})();
+</script>
+</body>
+</html>

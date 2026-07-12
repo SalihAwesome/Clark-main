@@ -589,7 +589,7 @@ function Hero({ mode, onPick }: { mode: Mode; onPick: (t: string) => void }) {
       </h1>
       <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground dark:text-dark-muted">
         One agent that acts — it drives a real browser, searches the web, fills forms,
-        logs in, extracts data, and saves documents. Powered by Gemini AI.
+        logs in, extracts data, and saves documents. Powered by AI.
       </p>
 
       <div className="mt-10 space-y-4">

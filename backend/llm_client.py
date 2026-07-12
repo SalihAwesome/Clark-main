@@ -11,7 +11,7 @@ Configuration (env vars):
   FIREWORKS_MODEL            — default "accounts/fireworks/models/deepseek-v4-pro"
   FIREWORKS_VISION_MODEL     — default "accounts/fireworks/models/kimi-k2p6"
   GEMINI_API_KEY             — optional (fallback)
-  GEMINI_MODEL               — default "gemini-2.0-flash"
+  GEMINI_MODEL               — default "gemma-4-26b-a4b-it"
   LLM_TIMEOUT                — per-call timeout in seconds (default 75)
 """
 
@@ -45,7 +45,7 @@ class LLMClient:
     def __init__(self) -> None:
         self.gemini_api_key = os.getenv("GEMINI_API_KEY", "")
         self.fireworks_api_key = os.getenv("FIREWORKS_API_KEY", "")
-        self.gemini_model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+        self.gemini_model = os.getenv("GEMINI_MODEL", "gemma-4-26b-a4b-it")
         self.fireworks_model = os.getenv("FIREWORKS_MODEL",
                                          "accounts/fireworks/models/deepseek-v4-pro")
         self.fireworks_vision_model = os.getenv("FIREWORKS_VISION_MODEL",
