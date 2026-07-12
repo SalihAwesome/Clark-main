@@ -1,0 +1,112 @@
+- generic [ref=e1]:
+  - main [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: Clark
+          - generic [ref=e16]: Web Agent
+        - generic [ref=e17]: Web
+        - generic [ref=e21]:
+          - button "History" [ref=e22] [cursor=pointer]
+          - button "My Info" [ref=e26] [cursor=pointer]
+          - button "New" [ref=e30] [cursor=pointer]
+          - button "Delete this conversation" [disabled] [ref=e33]
+          - button "Switch to light mode" [active] [ref=e129] [cursor=pointer]
+          - generic [ref=e39]:
+            - button "Chat" [ref=e40] [cursor=pointer]
+            - button "Agent" [ref=e41] [cursor=pointer]
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - text: BROWSER CONTROL
+          - generic [ref=e45]: ✦
+        - generic [ref=e46]:
+          - text: FORM FILLING
+          - generic [ref=e47]: ✦
+        - generic [ref=e48]:
+          - text: WEB SEARCH
+          - generic [ref=e49]: ✦
+        - generic [ref=e50]:
+          - text: HUMAN-IN-THE-LOOP
+          - generic [ref=e51]: ✦
+        - generic [ref=e52]:
+          - text: LIVE SCREENSHOTS
+          - generic [ref=e53]: ✦
+        - generic [ref=e54]:
+          - text: MULTI-STEP TASKS
+          - generic [ref=e55]: ✦
+        - generic [ref=e56]:
+          - text: DOCUMENT GENERATION
+          - generic [ref=e57]: ✦
+        - generic [ref=e58]:
+          - text: BROWSER CONTROL
+          - generic [ref=e59]: ✦
+        - generic [ref=e60]:
+          - text: FORM FILLING
+          - generic [ref=e61]: ✦
+        - generic [ref=e62]:
+          - text: WEB SEARCH
+          - generic [ref=e63]: ✦
+        - generic [ref=e64]:
+          - text: HUMAN-IN-THE-LOOP
+          - generic [ref=e65]: ✦
+        - generic [ref=e66]:
+          - text: LIVE SCREENSHOTS
+          - generic [ref=e67]: ✦
+        - generic [ref=e68]:
+          - text: MULTI-STEP TASKS
+          - generic [ref=e69]: ✦
+        - generic [ref=e70]:
+          - text: DOCUMENT GENERATION
+          - generic [ref=e71]: ✦
+      - generic [ref=e73]:
+        - generic [ref=e75]:
+          - heading "Autonomous Web Agent" [level=1] [ref=e76]: AutonomousWeb Agent
+          - paragraph [ref=e77]: One agent that acts — it drives a real browser, searches the web, fills forms, logs in, extracts data, and saves documents. Powered by Gemini AI.
+          - generic [ref=e78]:
+            - generic [ref=e79]: Try an agent task
+            - generic [ref=e83]:
+              - button "01 Search Search for the latest news about artificial intelligence" [ref=e84] [cursor=pointer]:
+                - generic [ref=e85]:
+                  - generic [ref=e86]: "01"
+                  - generic [ref=e87]:
+                    - generic [ref=e88]: Search
+                    - paragraph [ref=e89]: Search for the latest news about artificial intelligence
+              - button "02 Form Log into the-internet.herokuapp.com/login with username tomsmith and password SuperSecretPassword!" [ref=e90] [cursor=pointer]:
+                - generic [ref=e91]:
+                  - generic [ref=e92]: "02"
+                  - generic [ref=e93]:
+                    - generic [ref=e94]: Form
+                    - paragraph [ref=e95]: Log into the-internet.herokuapp.com/login with username tomsmith and password SuperSecretPassword!
+              - button "03 Research Find and summarize a research paper on climate change" [ref=e96] [cursor=pointer]:
+                - generic [ref=e97]:
+                  - generic [ref=e98]: "03"
+                  - generic [ref=e99]:
+                    - generic [ref=e100]: Research
+                    - paragraph [ref=e101]: Find and summarize a research paper on climate change
+              - button "04 Rates Check the current exchange rate between USD and EUR" [ref=e102] [cursor=pointer]:
+                - generic [ref=e103]:
+                  - generic [ref=e104]: "04"
+                  - generic [ref=e105]:
+                    - generic [ref=e106]: Rates
+                    - paragraph [ref=e107]: Check the current exchange rate between USD and EUR
+              - button "05 Document Visit a Wikipedia page and save a summary as a document" [ref=e108] [cursor=pointer]:
+                - generic [ref=e109]:
+                  - generic [ref=e110]: "05"
+                  - generic [ref=e111]:
+                    - generic [ref=e112]: Document
+                    - paragraph [ref=e113]: Visit a Wikipedia page and save a summary as a document
+              - button "06 Registration Visit a Wikipedia page about Python and save a summary as a document" [ref=e114] [cursor=pointer]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: "06"
+                  - generic [ref=e117]:
+                    - generic [ref=e118]: Registration
+                    - paragraph [ref=e119]: Visit a Wikipedia page about Python and save a summary as a document
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - textbox "Command the agent…" [ref=e123]
+            - button [disabled] [ref=e124]:
+              - generic [ref=e125]:
+                - text: Send
+                - generic [ref=e126]: →
+          - paragraph [ref=e127]: Agent drives a real browser & pauses for you to log in, enter OTPs, and approve actions
+  - alert [ref=e128]

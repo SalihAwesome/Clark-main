@@ -52,9 +52,10 @@ RULES:
 3. If "blocked" or "truncated" appears, move on immediately with what you have.
 4. Forms/registration: navigate → see_page → fill marks → submit. Use demoqa.com/automation-practice-form for testing forms, or the-internet.herokuapp.com/login for login forms. Use pause_for_user for CAPTCHA.
 5. Research papers: arxiv_search(paper_id=...) returns the full abstract. Wikipedia: open_page ONCE → see_page → read the provided content — it is clipped to ~15K chars but that is enough. Do NOT try mobile/printable/simple Wikipedia variants; they also clip. If you need the full text, web_search for "Wikipedia article on X" and compile a summary from snippets.
-6. Do what the user asks. If they ask you to "save a document" or "save a summary as a document", call save_document(filename, content). Do NOT ask "what would you like me to do next" — just do it. Do NOT inline-summarize without calling the tool.
+6. Do what the user asks. If they ask you to "save a document" or "save a summary as a document", ALWAYS produce BOTH a final_answer with the content/answer AND call save_document(filename, content) — never one without the other. Do NOT ask "what would you like me to do next" — just do it.
 7. Near step {MAX_STEPS-2}/{MAX_STEPS}: deliver a partial final_answer with whatever you have.
 8. NEVER output prose, markdown, or thinking — only JSON. Do NOT have a conversation. Do NOT ask the user what to do next.
+9. If web_search returns 0 results (empty results list), do NOT retry the same search — instead use open_page with a relevant URL (e.g. open a news site directly for news, or the relevant service page) to find content on the page itself.
 
 Tools:
 {tool_lines}
@@ -142,6 +143,9 @@ def _verify_note(tool: str, result: dict[str, Any]) -> str:
     if result.get("changed") is False and tool in ("click_mark", "click"):
         return (" WARNING: the page did NOT change after that click — it may not have worked. "
                 "Try a different box or approach; do not assume success.")
+    if tool == "web_search" and isinstance(result.get("results"), list) and len(result["results"]) == 0:
+        return (" The search returned 0 results. Try opening a relevant page directly with open_page() "
+                "instead of retrying the same search.")
     return ""
 
 

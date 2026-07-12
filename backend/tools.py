@@ -33,7 +33,10 @@ from defusedxml import ElementTree as ET
 from typing import Any, Callable
 
 import httpx
-from duckduckgo_search import DDGS
+try:
+    from ddgs import DDGS  # v9+ (renamed package, works)
+except ImportError:
+    from duckduckgo_search import DDGS  # legacy v8 fallback
 
 from browser_session import BrowserSession, get_session
 
@@ -55,7 +58,12 @@ def _safe_path(filename: str) -> pathlib.Path:
 def web_search(query: str, max_results: int = 6) -> dict[str, Any]:
     """Search the web and return result titles + URLs + snippets."""
     try:
-        with DDGS() as ddgs:
+        ddgs = DDGS()
+        raw = list(ddgs.text(query, max_results=max_results))
+        # DuckDuckGo can be flaky — retry once if empty
+        if not raw:
+            import time
+            time.sleep(1.5)
             raw = list(ddgs.text(query, max_results=max_results))
     except Exception as exc:
         return {"query": query, "error": f"Search failed: {exc}", "results": []}

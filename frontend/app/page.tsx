@@ -342,14 +342,14 @@ export default function Home() {
   const fresh = messages.length === 0;
 
   const navBtn =
-    "flex h-9 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-tight text-muted-foreground transition-all duration-200 ease-expo-out hover:border-accent/60 hover:text-accent disabled:opacity-40";
+    "flex h-9 items-center gap-1.5 rounded-lg border border-line px-3 text-xs font-semibold uppercase tracking-tight text-muted-foreground transition-all duration-200 ease-expo-out hover:border-accent/60 hover:text-accent disabled:opacity-40 dark:border-dark-line dark:text-dark-muted dark:hover:border-dark-accent/60 dark:hover:text-dark-accent";
 
   return (
     <div className="mx-auto flex h-screen max-w-[1400px] flex-col">
       {/* NAV */}
-      <header className="drag-region flex items-center gap-4 border-b border-line px-5 py-3 backdrop-blur-md">
+      <header className="drag-region flex items-center gap-4 border-b border-line px-5 py-3 backdrop-blur-md dark:border-dark-line">
         <ClarkMark />
-        <span className="ml-1 flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="ml-1 flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground dark:border-dark-line dark:text-dark-muted">
           <Icon name="globe" size={12} />
           Web
         </span>
@@ -380,15 +380,15 @@ export default function Home() {
             onClick={deleteConversation}
             disabled={busy || fresh}
             title="Delete this conversation"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-muted-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-40"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-muted-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-40 dark:border-dark-line dark:text-dark-muted"
           >
             <Icon name="trash" size={15} />
           </button>
           <ThemeToggle />
-          <div className="flex rounded-lg border border-line bg-surface/40 p-1 backdrop-blur-sm">
+          <div className="flex rounded-lg border border-line bg-surface/40 p-1 backdrop-blur-sm dark:border-dark-line dark:bg-dark-surface/40">
             {(["chat", "agent"] as Mode[]).map((m) => (
               <button key={m} onClick={() => switchMode(m)}
-                className={`rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-300 ${mode === m ? "bg-accent text-white dark:bg-dark-accent dark:text-dark-accent-foreground shadow-accent-glow animate-glow-pulse" : "text-muted-foreground hover:scale-105 hover:bg-surface/70 dark:hover:bg-dark-surface hover:text-foreground"}`}>
+                className={`rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-300 ${mode === m ? "bg-accent text-white dark:bg-dark-accent dark:text-dark-accent-foreground shadow-accent-glow animate-glow-pulse" : "text-muted-foreground hover:scale-105 hover:bg-surface/70 dark:hover:bg-dark-surface hover:text-foreground dark:text-dark-muted"}`}>
                 {m === "chat" ? "Chat" : "Agent"}
               </button>
             ))}
@@ -410,12 +410,12 @@ export default function Home() {
                 {messages.map((m, i) => (
                   <div key={i} className={`animate-fade-up ${m.role === "user" ? "flex justify-end" : ""}`}>
                     {m.role === "user" ? (
-                      <div className="max-w-[85%] rounded-2xl border border-accent/30 bg-accent/[0.08] px-4 py-2.5 text-sm text-foreground backdrop-blur-sm">
+                      <div className="max-w-[85%] rounded-2xl border border-accent/30 bg-accent/[0.08] px-4 py-2.5 text-sm text-foreground backdrop-blur-sm dark:border-dark-accent/30 dark:bg-dark-accent/[0.08] dark:text-dark-foreground">
                         {m.content}
                       </div>
                     ) : (
-                      <div className="border-l border-accent/40 pl-4">
-                        <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-accent">Clark</div>
+                      <div className="border-l border-accent/40 pl-4 dark:border-l dark:border-dark-accent/40">
+                        <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.3em] text-accent dark:text-dark-accent">Clark</div>
                         {m.trace && m.trace.length > 0 && (
                           <TraceDisclosure steps={m.trace} busy={busy && i === messages.length - 1} />
                         )}
@@ -426,14 +426,14 @@ export default function Home() {
                                 key={f.name}
                                 href={`/api/workspace/download/${encodeURIComponent(f.name)}`}
                                 download={f.name}
-                                className="group flex items-center gap-2.5 rounded-xl border border-accent/25 bg-accent/[0.05] px-3.5 py-2.5 text-xs text-foreground transition-all duration-200 ease-expo-out hover:border-accent/50 hover:bg-accent/[0.12] hover:shadow-[0_2px_8px_-2px_rgba(59,142,140,0.2)]"
+                                className="group flex items-center gap-2.5 rounded-xl border border-accent/25 bg-accent/[0.05] px-3.5 py-2.5 text-xs text-foreground transition-all duration-200 ease-expo-out hover:border-accent/50 hover:bg-accent/[0.12] hover:shadow-[0_2px_8px_-2px_rgba(59,142,140,0.2)] dark:border-dark-accent/25 dark:bg-dark-accent/[0.05] dark:text-dark-foreground dark:hover:border-dark-accent/50 dark:hover:bg-dark-accent/[0.12] dark:hover:shadow-[0_2px_8px_-2px_rgba(176,141,87,0.2)]"
                               >
-                                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent/20 bg-accent/[0.08] text-accent transition-all duration-200 group-hover:bg-accent/[0.14]">
+                                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent/20 bg-accent/[0.08] text-accent transition-all duration-200 group-hover:bg-accent/[0.14] dark:border-dark-accent/20 dark:bg-dark-accent/[0.08] dark:text-dark-accent dark:group-hover:bg-dark-accent/[0.14]">
                                   <Icon name="download" size={13} />
                                 </span>
                                 <span className="flex flex-col">
                                   <span className="font-medium leading-tight">{f.name}</span>
-                                  <span className="text-[10px] text-muted-foreground/60">
+                                  <span className="text-[10px] text-muted-foreground/60 dark:text-dark-muted/60">
                                     {(f.bytes / 1024).toFixed(1)} KB
                                   </span>
                                 </span>
@@ -447,7 +447,7 @@ export default function Home() {
                           </div>
                         ) : busy ? (
                           <div className="flex gap-1 py-2">
-                            <span className="typing-dot h-2 w-2 rounded-full bg-accent" /><span className="typing-dot h-2 w-2 rounded-full bg-accent" /><span className="typing-dot h-2 w-2 rounded-full bg-accent" />
+                            <span className="typing-dot h-2 w-2 rounded-full bg-accent dark:bg-dark-accent" /><span className="typing-dot h-2 w-2 rounded-full bg-accent dark:bg-dark-accent" /><span className="typing-dot h-2 w-2 rounded-full bg-accent dark:bg-dark-accent" />
                           </div>
                         ) : null}
                       </div>
@@ -459,10 +459,10 @@ export default function Home() {
           </div>
 
           {/* COMMAND BAR */}
-          <div className="border-t border-line px-5 py-4 backdrop-blur-md">
+          <div className="border-t border-line px-5 py-4 backdrop-blur-md dark:border-dark-line">
             {agentLocked ? (
-              <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border border-line bg-surface/40 px-4 py-3 backdrop-blur-sm">
-                <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+              <div className="mx-auto flex max-w-3xl items-center gap-3 rounded-2xl border border-line bg-surface/40 px-4 py-3 backdrop-blur-sm dark:border-dark-line dark:bg-dark-surface/40">
+                <span className="text-[11px] uppercase tracking-wide text-muted-foreground dark:text-dark-muted">
                   Agent runs one task per conversation. Start a new one to run another.
                 </span>
                 <button
@@ -490,9 +490,9 @@ export default function Home() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); send(input); } }}
                     placeholder={mode === "agent" ? "Command the agent…" : "Message Clark…"}
-                    className="h-14 w-full rounded-xl border border-line bg-surface/60 px-5 text-base font-medium text-foreground placeholder:text-foreground-subtle backdrop-blur-xl transition-all duration-300 focus:border-accent focus:bg-surface focus:shadow-accent-glow focus:outline-none"
+                    className="h-14 w-full rounded-xl border border-line bg-surface/60 px-5 text-base font-medium text-foreground placeholder:text-foreground-subtle backdrop-blur-xl transition-all duration-300 focus:border-accent focus:bg-surface focus:shadow-accent-glow focus:outline-none dark:border-dark-line dark:bg-dark-surface/60 dark:text-dark-foreground dark:placeholder:text-dark-foreground-subtle dark:focus:border-dark-accent dark:focus:bg-dark-surface"
                   />
-                  <div className="pointer-events-none absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 group-focus-within:opacity-100" />
+                  <div className="pointer-events-none absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 group-focus-within:opacity-100 dark:via-dark-accent" />
                 </div>
                 {busy ? (
                   <button onClick={stopAgent}
@@ -508,7 +508,7 @@ export default function Home() {
                 )}
               </div>
             )}
-            <p className="mx-auto mt-2 max-w-3xl text-[10px] uppercase tracking-wider text-muted-foreground/60">
+            <p className="mx-auto mt-2 max-w-3xl text-[10px] uppercase tracking-wider text-muted-foreground/60 dark:text-dark-muted/60">
               {mode === "agent"
                 ? "Agent drives a real browser & pauses for you to log in, enter OTPs, and approve actions"
                 : "Direct chat with Clark"}
@@ -518,7 +518,7 @@ export default function Home() {
 
         {/* LIVE PREVIEW */}
         {mode === "agent" && !fresh && (
-          <div className="min-h-0 overflow-y-auto border-l border-line p-4">
+          <div className="min-h-0 overflow-y-auto border-l border-line p-4 dark:border-l dark:border-dark-line">
             <LivePreview shot={shot} pending={pending} busy={busy} files={files} sessionId={sessionId.current} apiBase={API_BASE} onResume={resume} onCredentials={submitCredentials} onSubmitInputs={submitInputs} onSubmitCaptcha={submitCaptcha} onSubmitOtp={submitOtp} onCancel={() => resume("cancelled", false)} />
           </div>
         )}
@@ -544,11 +544,11 @@ export default function Home() {
       {modeSwitch && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-md"
              onClick={() => setModeSwitch(null)}>
-          <div className="glow animate-scale-in w-full max-w-md rounded-2xl border border-accent/40 bg-surface/90 p-6 backdrop-blur-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-accent">
+          <div className="glow animate-scale-in w-full max-w-md rounded-2xl border border-accent/40 bg-surface/90 p-6 backdrop-blur-xl dark:border-dark-accent/40 dark:bg-dark-surface/90" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-2 text-xs font-bold uppercase tracking-[0.25em] text-accent dark:text-dark-accent">
               Switch to {modeSwitch} mode?
             </div>
-            <p className="text-sm leading-relaxed text-foreground">
+            <p className="text-sm leading-relaxed text-foreground dark:text-dark-foreground">
               {busy
                 ? "The agent is still working on this task. Switching stops it and starts a new conversation."
                 : "This starts a new conversation — the current one will be cleared."}
@@ -562,7 +562,7 @@ export default function Home() {
               </button>
               <button
                 onClick={() => setModeSwitch(null)}
-                className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon"
+                className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon dark:border-dark-line dark:text-dark-foreground"
               >
                 Cancel
               </button>
@@ -583,22 +583,22 @@ function Hero({ mode, onPick }: { mode: Mode; onPick: (t: string) => void }) {
 
   return (
     <div className="mx-auto max-w-5xl py-10 pt-4">
-      <h1 className="text-center font-display text-[clamp(2.5rem,9vw,7rem)] font-extrabold leading-[0.9] tracking-tightest text-foreground">
+      <h1 className="text-center font-display text-[clamp(2.5rem,9vw,7rem)] font-extrabold leading-[0.9] tracking-tightest text-foreground dark:text-dark-foreground">
         Autonomous<br />
-        <span className="text-primary">Web Agent</span>
+        <span className="text-primary dark:text-dark-accent">Web Agent</span>
       </h1>
-      <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
+      <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground dark:text-dark-muted">
         One agent that acts — it drives a real browser, searches the web, fills forms,
         logs in, extracts data, and saves documents. Powered by Gemini AI.
       </p>
 
       <div className="mt-10 space-y-4">
         <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-line to-transparent" />
-          <span className="animate-pulse-glow font-mono text-xs uppercase tracking-widest text-foreground-subtle">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-line to-transparent dark:via-dark-line" />
+          <span className="animate-pulse-glow font-mono text-xs uppercase tracking-widest text-foreground-subtle dark:text-dark-foreground-subtle">
             {mode === "agent" ? "Try an agent task" : "Try a question"}
           </span>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-line to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-line to-transparent dark:via-dark-line" />
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
@@ -608,17 +608,17 @@ function Hero({ mode, onPick }: { mode: Mode; onPick: (t: string) => void }) {
               onClick={() => onPick(q.text)}
               onMouseMove={onMove}
               style={{ animationDelay: `${(i * 0.08).toFixed(2)}s` }}
-              className="card-spotlight group animate-fade-up cursor-pointer rounded-2xl border border-line bg-surface/40 p-5 text-start backdrop-blur-xl transition-all duration-300 ease-expo-out hover:-translate-y-1 hover:border-line-hover hover:shadow-card-hover"
+              className="card-spotlight group animate-fade-up cursor-pointer rounded-2xl border border-line bg-surface/40 p-5 text-start backdrop-blur-xl transition-all duration-300 ease-expo-out hover:-translate-y-1 hover:border-line-hover hover:shadow-card-hover dark:border-dark-line dark:bg-black/40 dark:hover:border-dark-line-hover"
             >
               <div className="relative z-10 flex items-start gap-4">
-                <span className="font-display text-3xl font-bold leading-none text-foreground-subtle transition-all duration-200 group-hover:scale-110 group-hover:text-gradient-accent">
+                <span className="font-display text-3xl font-bold leading-none text-foreground-subtle transition-all duration-200 group-hover:scale-110 group-hover:text-gradient-accent dark:text-dark-foreground-subtle">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="min-w-0 flex-1 space-y-1">
-                  <div className="font-mono text-[10px] uppercase tracking-widest text-accent group-hover:animate-shimmer">
+                  <div className="font-mono text-[10px] uppercase tracking-widest text-accent group-hover:animate-shimmer dark:text-dark-accent">
                     {q.label}
                   </div>
-                  <p className="text-sm leading-relaxed text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+                  <p className="text-sm leading-relaxed text-muted-foreground transition-colors duration-200 group-hover:text-foreground dark:text-dark-muted dark:group-hover:text-dark-foreground">
                     {q.text}
                   </p>
                 </div>

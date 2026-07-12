@@ -9,4 +9,4 @@ pydantic>=2.11.7         # 2.11.x pulls pydantic-core with cp314 wheels (2.10.x 
 python-multipart>=0.0.20
 defusedxml>=0.7.1          # safe XML parsing (used in tools.py)
 playwright==1.61.0         # pin to match the Docker base image (mcr.microsoft.com/playwright/python)
-duckduckgo-search>=8.0.0   # web search via DuckDuckGo API
+ddgs>=9.14.4               # web search via DuckDuckGo API (renamed from duckduckgo-search v9+)
