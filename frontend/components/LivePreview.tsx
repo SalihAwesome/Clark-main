@@ -98,10 +98,10 @@ export function LivePreview({
   return (
     <aside className="flex w-full flex-col gap-4">
       {/* Live frame */}
-      <div className="overflow-hidden rounded-2xl border border-line bg-surface/40 backdrop-blur-sm">
-        <div className="flex items-center gap-2 border-b border-line px-3 py-2">
+      <div className="overflow-hidden rounded-2xl border border-line bg-surface/40 backdrop-blur-sm dark:border-dark-line dark:bg-dark-surface/40">
+        <div className="flex items-center gap-2 border-b border-line px-3 py-2 dark:border-dark-line">
           <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground">
-            <Icon name="dot" size={8} className={busy && !pending ? "text-accent" : "text-muted-foreground/40"} />
+            <Icon name="dot" size={8} className={(busy && !pending) ? "text-accent dark:text-dark-accent" : "text-muted-foreground/40"} />
             Live Browser
           </span>
           <div className="ms-auto truncate text-[10px] text-muted-foreground/70">
@@ -109,7 +109,7 @@ export function LivePreview({
           </div>
           <span
             className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
-              pending ? "bg-maroon text-foreground" : busy ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
+              pending ? "bg-maroon text-foreground" : busy ? "bg-accent dark:bg-dark-accent text-accent-foreground dark:text-dark-accent-foreground" : "bg-muted text-muted-foreground"
             }`}
           >
             {pending ? "waiting" : busy ? "live" : "idle"}
@@ -117,7 +117,7 @@ export function LivePreview({
           <button
             onClick={() => setMaximized(true)}
             title="Maximize"
-            className="flex h-6 w-6 items-center justify-center rounded-lg border border-line text-muted-foreground transition-all duration-200 ease-expo-out hover:border-accent/60 hover:text-accent"
+            className="flex h-6 w-6 items-center justify-center rounded-lg border border-line text-muted-foreground transition-all duration-200 ease-expo-out hover:border-accent/60 hover:text-accent dark:border-dark-line dark:text-dark-muted dark:hover:border-dark-accent/60 dark:hover:text-dark-accent"
           >
             <Icon name="maximize" size={12} />
           </button>
@@ -143,7 +143,7 @@ export function LivePreview({
             <span className="truncate text-[11px] text-muted-foreground">{shot?.page_url || shot?.title || ""}</span>
             <span
               className={`ms-auto rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide ${
-                pending ? "bg-maroon text-foreground" : busy ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"
+                pending ? "bg-maroon text-foreground" : busy ? "bg-accent dark:bg-dark-accent text-accent-foreground dark:text-dark-accent-foreground" : "bg-muted text-muted-foreground"
               }`}
             >
               {pending ? "waiting" : busy ? "live" : "idle"}
@@ -169,9 +169,9 @@ export function LivePreview({
       {pending && isCredentials && (
         <form
           onSubmit={(e) => { e.preventDefault(); onCredentials(creds, rememberLogin); setCreds({}); }}
-          className="glow rounded-2xl border border-accent/40 bg-accent/[0.08] p-4 backdrop-blur-sm"
+          className="glow rounded-2xl border border-accent/40 dark:border-dark-accent/40 bg-accent/[0.08] dark:bg-dark-accent/[0.08] p-4 backdrop-blur-sm"
         >
-          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent"><Icon name="key" size={14} /> Enter Credentials</div>
+          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name="key" size={14} /> Enter Credentials</div>
           <p className="text-sm leading-relaxed text-foreground">{pending.reason}</p>
           <p className="mt-2 text-[11px] text-muted-foreground">
             Masked & sent only to your local backend to fill the form — never shown to the AI.
@@ -196,11 +196,11 @@ export function LivePreview({
           </label>
           <div className="mt-3 flex gap-2">
             <button type="submit" disabled={busy}
-              className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50">
+              className="flex-1 rounded-xl bg-accent dark:bg-dark-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50">
               Log In For Me
             </button>
             <button type="button" onClick={() => onResume("declined", false)} disabled={busy}
-              className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50">
+              className="rounded-xl border border-line dark:border-dark-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground dark:text-white transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50">
               Cancel
             </button>
           </div>
@@ -216,9 +216,9 @@ export function LivePreview({
             onSubmitInputs(info, saveKeys);
             if (!isEdit) setInfo({});
           }}
-          className="glow rounded-2xl border border-accent/40 bg-accent/[0.08] p-4 backdrop-blur-sm"
+          className="glow rounded-2xl border border-accent/40 dark:border-dark-accent/40 bg-accent/[0.08] dark:bg-dark-accent/[0.08] p-4 backdrop-blur-sm"
         >
-          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent"><Icon name={isEdit ? "pencil" : "clipboard"} size={14} /> {isEdit ? "Review & Save" : "A Few Details"}</div>
+          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name={isEdit ? "pencil" : "clipboard"} size={14} /> {isEdit ? "Review & Save" : "A Few Details"}</div>
           <p className="text-sm leading-relaxed text-foreground">{pending.reason}</p>
           {!isEdit && (
             <p className="mt-1 text-[11px] text-muted-foreground">
@@ -273,7 +273,7 @@ export function LivePreview({
             <button
               type="submit"
               disabled={busy}
-              className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex-1 rounded-xl bg-accent dark:bg-dark-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
             >
               {isEdit ? "Save Update →" : "Continue →"}
             </button>
@@ -281,7 +281,7 @@ export function LivePreview({
               type="button"
               onClick={() => { setInfo({}); onCancel(); }}
               disabled={busy}
-              className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
+              className="rounded-xl border border-line dark:border-dark-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground dark:text-white transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
             >
               Cancel
             </button>
@@ -297,9 +297,9 @@ export function LivePreview({
             if (pending.image) { onSubmitCaptcha(captcha); setCaptcha(""); }
             else { onResume("captcha solved", true); }
           }}
-          className="glow rounded-2xl border border-accent/40 bg-accent/[0.08] p-4 backdrop-blur-sm"
+          className="glow rounded-2xl border border-accent/40 dark:border-dark-accent/40 bg-accent/[0.08] dark:bg-dark-accent/[0.08] p-4 backdrop-blur-sm"
         >
-          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent"><Icon name="hash" size={14} /> Verification Code</div>
+          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name="hash" size={14} /> Verification Code</div>
           <p className="text-sm leading-relaxed text-foreground">{pending.reason}</p>
           {pending.image && (
             <div className="mt-3 flex justify-center rounded-xl border border-line bg-white p-2">
@@ -322,7 +322,7 @@ export function LivePreview({
             <button
               type="submit"
               disabled={busy || (!!pending.image && !captcha.trim())}
-              className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex-1 rounded-xl bg-accent dark:bg-dark-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
             >
               {pending.image ? "Fill & Submit →" : "I'm Done — Continue"}
             </button>
@@ -330,7 +330,7 @@ export function LivePreview({
               type="button"
               onClick={() => { setCaptcha(""); onCancel(); }}
               disabled={busy}
-              className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
+              className="rounded-xl border border-line dark:border-dark-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground dark:text-white transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
             >
               Cancel
             </button>
@@ -342,9 +342,9 @@ export function LivePreview({
       {pending && isOtp && (
         <form
           onSubmit={(e) => { e.preventDefault(); if (otp.trim()) { onSubmitOtp(otp.trim()); setOtp(""); } }}
-          className="glow rounded-2xl border border-accent/40 bg-accent/[0.08] p-4 backdrop-blur-sm"
+          className="glow rounded-2xl border border-accent/40 dark:border-dark-accent/40 bg-accent/[0.08] dark:bg-dark-accent/[0.08] p-4 backdrop-blur-sm"
         >
-          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent"><Icon name="hash" size={14} /> One-Time Code (OTP)</div>
+          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name="hash" size={14} /> One-Time Code (OTP)</div>
           <p className="text-sm leading-relaxed text-foreground">{pending.reason}</p>
           <input
             value={otp}
@@ -359,7 +359,7 @@ export function LivePreview({
             <button
               type="submit"
               disabled={busy || !otp.trim()}
-              className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex-1 rounded-xl bg-accent dark:bg-dark-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
             >
               Fill & Continue →
             </button>
@@ -367,7 +367,7 @@ export function LivePreview({
               type="button"
               onClick={() => { setOtp(""); onCancel(); }}
               disabled={busy}
-              className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
+              className="rounded-xl border border-line dark:border-dark-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground dark:text-white transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
             >
               Cancel
             </button>
@@ -377,17 +377,17 @@ export function LivePreview({
 
       {/* Payment review */}
       {pending && isReview && (
-        <div className="glow rounded-2xl border border-accent/40 bg-accent/[0.08] p-4 backdrop-blur-sm">
-          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent"><Icon name="receipt" size={14} /> Review Needed</div>
+        <div className="glow rounded-2xl border border-accent/40 dark:border-dark-accent/40 bg-accent/[0.08] dark:bg-dark-accent/[0.08] p-4 backdrop-blur-sm">
+          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name="receipt" size={14} /> Review Needed</div>
           <p className="text-sm leading-relaxed text-foreground">{pending.reason}</p>
           {pending.details?.total_fees && (
-            <div className="mt-3 flex items-baseline justify-between rounded-xl border border-line bg-bg/60 px-3 py-2">
+            <div className="mt-3 flex items-baseline justify-between rounded-xl border border-line dark:border-dark-line bg-bg/60 dark:bg-black/60 px-3 py-2">
               <span className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Total Fee Amount</span>
               <span className="font-display text-xl font-bold text-accent">{pending.details.total_fees}</span>
             </div>
           )}
           {!!pending.details?.address?.length && (
-            <div className="mt-3 rounded-xl border border-line bg-bg/60 px-3 py-2">
+            <div className="mt-3 rounded-xl border border-line dark:border-dark-line bg-bg/60 dark:bg-black/60 px-3 py-2">
               <div className="mb-1 text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{pending.details.title || "Details"}</div>
               <div className="grid grid-cols-1 gap-y-1">
                 {pending.details.address.map((r, i) => (
@@ -400,7 +400,7 @@ export function LivePreview({
             </div>
           )}
           {!pending.details?.total_fees && !pending.details?.address?.length && pending.details?.raw && (
-            <pre className="mt-3 max-h-40 overflow-auto whitespace-pre-wrap rounded-xl border border-line bg-bg/60 px-3 py-2 text-[12px] text-foreground">{pending.details.raw}</pre>
+            <pre className="mt-3 max-h-40 overflow-auto whitespace-pre-wrap rounded-xl border border-line dark:border-dark-line bg-bg/60 dark:bg-black/60 px-3 py-2 text-[12px] text-foreground">{pending.details.raw}</pre>
           )}
           {pending.details?.email && (
             <p className="mt-3 text-[12px] text-muted-foreground">This will be sent to your email: <span className="font-medium text-foreground" dir="ltr">{pending.details.email}</span></p>
@@ -409,14 +409,14 @@ export function LivePreview({
             <button
               onClick={() => onResume("approved — proceed with payment", true)}
               disabled={busy}
-              className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex-1 rounded-xl bg-accent dark:bg-dark-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
             >
               Approve & Continue →
             </button>
             <button
               onClick={() => onResume("no — cancel the payment", false)}
               disabled={busy}
-              className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
+              className="rounded-xl border border-line dark:border-dark-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground dark:text-white transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
             >
               Cancel
             </button>
@@ -425,8 +425,8 @@ export function LivePreview({
       )}
 
       {pending && !isCredentials && !isInfo && !isEdit && !isCaptcha && !isOtp && !isReview && (
-        <div className="glow rounded-2xl border border-accent/40 bg-accent/[0.08] p-4 backdrop-blur-sm">
-          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent">
+        <div className="glow rounded-2xl border border-accent/40 dark:border-dark-accent/40 bg-accent/[0.08] dark:bg-dark-accent/[0.08] p-4 backdrop-blur-sm">
+          <div className="mb-1 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent">
             <Icon name={isConfirm ? "shield-check" : "lock"} size={14} />
             {isConfirm ? "Approve Action" : "Login Needed"}
           </div>
@@ -448,7 +448,7 @@ export function LivePreview({
             <button
               onClick={() => { onResume(note || "approved", true); setNote(""); }}
               disabled={busy}
-              className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex-1 rounded-xl bg-accent dark:bg-dark-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
             >
               {isConfirm ? "Approve & Run" : "I'm Done — Continue"}
             </button>
@@ -456,7 +456,7 @@ export function LivePreview({
               <button
                 onClick={() => { onResume("declined", false); setNote(""); }}
                 disabled={busy}
-                className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
+                className="rounded-xl border border-line dark:border-dark-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground dark:text-white transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon disabled:opacity-50"
               >
                 Skip
               </button>
@@ -467,12 +467,12 @@ export function LivePreview({
 
       {/* Artefacts */}
       {files.length > 0 && (
-        <div className="rounded-2xl border border-line bg-surface/30 p-3 backdrop-blur-sm">
+        <div className="rounded-2xl border border-line bg-surface/30 p-3 backdrop-blur-sm dark:border-dark-line dark:bg-dark-surface/30">
           <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground">Artefacts</div>
           <ul className="space-y-1">
             {files.map((f) => (
               <li key={f.name} className="flex justify-between text-[12px] text-muted-foreground">
-                <span className="truncate"><span className="text-accent">▸</span> {f.name}</span>
+                <span className="truncate"><span className="text-accent dark:text-dark-accent">▸</span> {f.name}</span>
                 <span className="ml-2 shrink-0 text-muted-foreground/50">{f.bytes}B</span>
               </li>
             ))}

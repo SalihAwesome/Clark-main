@@ -52,8 +52,8 @@ export function StepTimeline({ steps }: { steps: TraceStep[] }) {
   // number only the tool actions
   let n = 0;
   return (
-    <div className="mt-3 border-t border-line pt-3">
-      <div className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-accent/80">
+    <div className="mt-3 border-t border-line pt-3 dark:border-dark-line">
+      <div className="mb-3 text-[10px] font-bold uppercase tracking-[0.3em] text-accent/80 dark:text-dark-accent/80">
         ── Agent Trace
       </div>
       <ul className="space-y-2.5">
@@ -62,20 +62,20 @@ export function StepTimeline({ steps }: { steps: TraceStep[] }) {
           return (
             <li key={i} className="animate-slide-in">
               {s.type === "thought" && (
-                <p className="pl-[3.2rem] text-sm italic text-muted-foreground">{s.content}</p>
+                <p className="pl-[3.2rem] text-sm italic text-muted-foreground dark:text-dark-muted">{s.content}</p>
               )}
 
               {s.type === "action" && (
                 <div className="flex items-center gap-3">
-                  <span className="w-12 shrink-0 text-right font-display text-3xl font-bold leading-none text-muted-foreground/30">
+                  <span className="w-12 shrink-0 text-right font-display text-3xl font-bold leading-none text-muted-foreground/30 dark:text-dark-muted/30">
                     {String(n).padStart(2, "0")}
                   </span>
-                  <div className="min-w-0 flex-1 border-l-2 border-accent pl-3">
-                    <div className="text-sm font-bold uppercase tracking-tight text-accent">
+                  <div className="min-w-0 flex-1 border-l-2 border-accent pl-3 dark:border-dark-accent">
+                    <div className="text-sm font-bold uppercase tracking-tight text-accent dark:text-dark-accent">
                       {TOOL_LABELS[s.tool] ?? s.tool}
                     </div>
                     {actionSummary(s.tool, s.input) && (
-                      <div className="truncate text-[12px] text-muted-foreground">
+                      <div className="truncate text-[12px] text-muted-foreground dark:text-dark-muted">
                         {actionSummary(s.tool, s.input)}
                       </div>
                     )}
@@ -92,7 +92,7 @@ export function StepTimeline({ steps }: { steps: TraceStep[] }) {
                   href={`/api/screenshot/${s.url}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="ml-[3.2rem] block max-w-md overflow-hidden rounded-xl border border-line transition-all duration-200 ease-expo-out hover:border-accent/60"
+                  className="ml-[3.2rem] block max-w-md overflow-hidden rounded-xl border border-line transition-all duration-200 ease-expo-out hover:border-accent/60 dark:border-dark-line dark:hover:border-dark-accent/60"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`/api/screenshot/${s.url}`} alt={s.title || "frame"} className="max-h-44 w-full object-cover object-top" />
@@ -131,7 +131,7 @@ function renderObs(result: Record<string, unknown>) {
     return (
       <div className="space-y-0.5">
         {rs.slice(0, 3).map((r, i) => (
-          <a key={i} href={r.url} target="_blank" rel="noreferrer" className="block truncate text-[12px] text-accent hover:underline">
+          <a key={i} href={r.url} target="_blank" rel="noreferrer" className="block truncate text-[12px] text-accent hover:underline dark:text-dark-accent">
             → {r.title || r.url}
           </a>
         ))}
@@ -139,20 +139,20 @@ function renderObs(result: Record<string, unknown>) {
     );
   }
   if (result?.understanding)
-    return <p className="flex items-start gap-1.5 text-[12px] leading-relaxed text-muted-foreground"><Icon name="eye" size={13} className="mt-0.5 shrink-0" /> {String(result.understanding).slice(0, 200)}…</p>;
+    return <p className="flex items-start gap-1.5 text-[12px] leading-relaxed text-muted-foreground dark:text-dark-muted"><Icon name="eye" size={13} className="mt-0.5 shrink-0" /> {String(result.understanding).slice(0, 200)}…</p>;
   if (result?.saved_to)
     return (
-      <span className="inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[11px] uppercase tracking-wide text-accent">
+      <span className="inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[11px] uppercase tracking-wide text-accent dark:border-dark-accent/40 dark:bg-dark-accent/10 dark:text-dark-accent">
         <Icon name="check" size={11} /> saved · {String(result.saved_to)}
       </span>
     );
   if (result?.information || result?.summary || result?.guidance || result?.explanation)
     return (
-      <p className="text-[12px] leading-relaxed text-muted-foreground">
+      <p className="text-[12px] leading-relaxed text-muted-foreground dark:text-dark-muted">
         {String(result.information || result.summary || result.guidance || result.explanation).slice(0, 200)}…
       </p>
     );
   if (result?.title || result?.url)
-    return <p className="text-[12px] text-muted-foreground"><span className="text-foreground">{String(result.title || "Page")}</span></p>;
+    return <p className="text-[12px] text-muted-foreground dark:text-dark-muted"><span className="text-foreground">{String(result.title || "Page")}</span></p>;
   return null;
 }

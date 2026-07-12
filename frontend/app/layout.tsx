@@ -29,8 +29,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${nunito.variable}`}>
-      <body className="min-h-screen bg-[#F7F4EE] font-sans text-[#2C2826] dark:bg-[#1C1816] dark:text-[#ECE6E0]">
+    <html lang="en" className={`${inter.variable} ${nunito.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            try {
+              var t = localStorage.getItem("theme");
+              var isDark = t === "dark" || (t !== "light" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+              document.documentElement.classList.toggle("dark", isDark);
+              document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+            } catch(e) {}
+          `
+        }} />
+      </head>
+      <body className="min-h-screen bg-[#F7F4EE] font-sans text-[#2C2826] dark:bg-black dark:text-white">
         {/* Animated mesh-gradient background */}
         <div className="fixed inset-0 -z-10">
           <MeshBackground />

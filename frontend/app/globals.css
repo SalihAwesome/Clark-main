@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light dark;
-}
 
 html,
 body {
@@ -25,7 +22,7 @@ body {
   background: #efe8de;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #2b2521;
+  background: #0b0f1a;
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(44, 40, 38, 0.15);
@@ -33,8 +30,8 @@ body {
   border-radius: 999px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(236, 230, 224, 0.12);
-  border-color: #2b2521;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #0b0f1a;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #c96a4d;
@@ -75,8 +72,8 @@ body {
 
 .dark .grid-overlay {
   background-image:
-    linear-gradient(rgba(236, 230, 224, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(236, 230, 224, 0.2) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
 }
 
 /* Edge-to-edge marquee (CSS, GPU transform) */
@@ -90,7 +87,7 @@ body {
   background: rgba(44, 40, 38, 0.08);
 }
 .dark .grid-hairline {
-  background: rgba(236, 230, 224, 0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Letter-by-letter color cycle for the hero (delay set inline per <span>) */
@@ -115,16 +112,16 @@ body {
 @keyframes color-shift-dark {
   0%,
   100% {
-    color: #ece6e0;
+    color: #ffffff;
   }
   25% {
-    color: #c96a4d;
+    color: #b08d57;
   }
   50% {
-    color: #3b8e8c;
+    color: #d9dce3;
   }
   75% {
-    color: #d4973a;
+    color: #2e3a4f;
   }
 }
 .text-color-shift span {
@@ -188,6 +185,18 @@ body {
 .glow {
   animation: glow 2.4s ease-in-out infinite;
 }
+.dark .glow {
+  animation-name: glow-dark;
+}
+@keyframes glow-dark {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(176, 141, 87, 0), 0 0 24px rgba(176, 141, 87, 0.22);
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.1), 0 0 34px rgba(176, 141, 87, 0.45);
+  }
+}
 
 .shimmer {
   background: linear-gradient(
@@ -198,6 +207,15 @@ body {
   );
   background-size: 400% 100%;
   animation: shimmer 1.3s ease infinite;
+}
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(176, 141, 87, 0.05) 25%,
+    rgba(176, 141, 87, 0.22) 37%,
+    rgba(176, 141, 87, 0.05) 63%
+  );
+  background-size: 400% 100%;
 }
 @keyframes shimmer {
   0% {
@@ -268,6 +286,9 @@ body {
     color: transparent;
     animation: text-shimmer 3s linear infinite;
   }
+  .dark .animate-shimmer {
+    background-image: linear-gradient(110deg, #b08d57 20%, #ffffff 50%, #b08d57 80%);
+  }
   /* Static terracotta gradient text (used for the number badge on hover) */
   .text-gradient-accent {
     background-image: linear-gradient(135deg, #c96a4d, #e0a088);
@@ -330,6 +351,25 @@ body {
   }
 }
 
+/* Dark-mode variant: gold breathing halo */
+@keyframes btn-send-breathe-dark {
+  0%,
+  100% {
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+      0 2px 10px -2px rgba(176, 141, 87, 0.45),
+      0 0 0 0 rgba(176, 141, 87, 0);
+  }
+  50% {
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+      0 2px 10px -2px rgba(176, 141, 87, 0.55),
+      0 0 22px 1px rgba(176, 141, 87, 0.28);
+  }
+}
+
 /* Calm "active / interruptible" ping for the Stop status dot */
 @keyframes btn-stop-ping {
   0% {
@@ -346,6 +386,9 @@ body {
 @layer utilities {
   .btn-send-breathe {
     animation: btn-send-breathe 3.6s ease-in-out infinite;
+  }
+  .dark .btn-send-breathe {
+    animation-name: btn-send-breathe-dark;
   }
 
   /* Themeable sheen shared by Send (teal-white) and Stop (warm amber). */

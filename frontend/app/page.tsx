@@ -9,6 +9,7 @@ import { ProfilePanel } from "@/components/ProfilePanel";
 import { HistoryPanel } from "@/components/HistoryPanel";
 import { Markdown } from "@/components/Markdown";
 import { Icon } from "@/components/Icon";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { ChatMsg, PaymentField, Pending, ProfileField, SavedCredential } from "@/components/types";
 
 type Mode = "chat" | "agent";
@@ -383,10 +384,11 @@ export default function Home() {
           >
             <Icon name="trash" size={15} />
           </button>
+          <ThemeToggle />
           <div className="flex rounded-lg border border-line bg-surface/40 p-1 backdrop-blur-sm">
             {(["chat", "agent"] as Mode[]).map((m) => (
               <button key={m} onClick={() => switchMode(m)}
-                className={`rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-300 ${mode === m ? "bg-accent text-white shadow-accent-glow animate-glow-pulse" : "text-muted-foreground hover:scale-105 hover:bg-surface/70 hover:text-foreground"}`}>
+                className={`rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-300 ${mode === m ? "bg-accent text-white dark:bg-dark-accent dark:text-dark-accent-foreground shadow-accent-glow animate-glow-pulse" : "text-muted-foreground hover:scale-105 hover:bg-surface/70 dark:hover:bg-dark-surface hover:text-foreground"}`}>
                 {m === "chat" ? "Chat" : "Agent"}
               </button>
             ))}
@@ -466,7 +468,7 @@ export default function Home() {
                 <button
                   onClick={newConversation}
                   disabled={busy}
-                  className="ms-auto h-9 shrink-0 rounded-xl bg-accent px-4 text-xs font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 hover:scale-[1.02] active:scale-95 disabled:opacity-40"
+                  className="ms-auto h-9 shrink-0 rounded-xl bg-accent px-4 text-xs font-bold uppercase tracking-tight text-accent-foreground dark:bg-dark-accent dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 hover:scale-[1.02] active:scale-95 disabled:opacity-40"
                 >
                   <span className="flex items-center justify-center gap-1.5"><Icon name="plus" size={14} /> New Conversation</span>
                 </button>
@@ -500,7 +502,7 @@ export default function Home() {
                   </button>
                 ) : (
                   <button onClick={() => send(input)} disabled={!input.trim()}
-                    className="group relative h-14 shrink-0 overflow-hidden rounded-xl px-6 text-base font-medium text-accent-foreground transition-all duration-300 ease-expo-out bg-primary dark:bg-accent shadow-[0_1px_0_0_rgba(255,255,255,0.22)_inset,0_-1px_0_0_rgba(0,0,0,0.12)_inset,0_2px_10px_-2px_rgba(59,142,140,0.45)] btn-sheen [--btn-sheen-tint:rgba(255,247,235,0.5)] enabled:btn-send-breathe hover:brightness-[1.06] hover:[--btn-sheen-speed:1.8s] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-surface dark:disabled:bg-dark-surface disabled:text-muted-foreground disabled:shadow-none">
+                    className="group relative h-14 shrink-0 overflow-hidden rounded-xl px-6 text-base font-medium text-accent-foreground transition-all duration-300 ease-expo-out bg-primary dark:bg-dark-accent dark:text-dark-accent-foreground shadow-[0_1px_0_0_rgba(255,255,255,0.22)_inset,0_-1px_0_0_rgba(0,0,0,0.12)_inset,0_2px_10px_-2px_rgba(59,142,140,0.45)] btn-sheen [--btn-sheen-tint:rgba(255,247,235,0.5)] enabled:btn-send-breathe hover:brightness-[1.06] hover:[--btn-sheen-speed:1.8s] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-surface dark:disabled:bg-dark-surface disabled:text-muted-foreground disabled:shadow-none">
                     <span className="relative z-[2]">Send<span className="btn-send-arrow" aria-hidden="true">→</span></span>
                   </button>
                 )}
@@ -554,7 +556,7 @@ export default function Home() {
             <div className="mt-5 flex gap-2">
               <button
                 onClick={() => doSwitchMode(modeSwitch)}
-                className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 hover:scale-[1.02] active:scale-95"
+                className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:bg-dark-accent dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 hover:scale-[1.02] active:scale-95"
               >
                 Switch & Start New
               </button>

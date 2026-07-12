@@ -6,7 +6,8 @@ export type IconName =
   | "chevron-right" | "check" | "maximize" | "x" | "dot" | "key" | "lock" | "hash"
   | "receipt" | "shield-check" | "clipboard" | "pencil" | "monitor" | "globe"
   | "id-card" | "credit-card" | "upload" | "plus" | "clock" | "message" | "bot"
-  | "trash" | "arrow-left" | "user" | "eye" | "mic" | "alert" | "download";
+  | "trash" | "arrow-left" | "user" | "eye" | "mic" | "alert" | "download"
+  | "sun" | "moon";
 
 const PATHS: Record<IconName, JSX.Element> = {
   "chevron-right": <path d="m9 18 6-6-6-6" />,
@@ -37,6 +38,8 @@ const PATHS: Record<IconName, JSX.Element> = {
   mic: <><rect x="9" y="2" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8" /></>,
   alert: <><path d="M12 9v4M12 17h.01" /><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z" /></>,
   download: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" /></>,
+  sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></>,
+  moon: <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />,
 };
 
 export function Icon({ name, size = 16, className = "", ...rest }: { name: IconName; size?: number; className?: string } & SVGProps<SVGSVGElement>) {

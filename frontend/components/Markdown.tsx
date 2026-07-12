@@ -26,7 +26,7 @@ function parseInline(text: string, keyBase: string): ReactNode[] {
     const key = `${keyBase}-i${i++}`;
     if (tok.startsWith("`")) {
       nodes.push(
-        <code key={key} className="rounded bg-foreground/10 px-1.5 py-0.5 font-mono text-[13px]">
+        <code key={key} className="rounded bg-foreground/10 dark:bg-white/10 px-1.5 py-0.5 font-mono text-[13px]">
           {tok.slice(1, -1)}
         </code>
       );
@@ -35,7 +35,7 @@ function parseInline(text: string, keyBase: string): ReactNode[] {
       if (mm) {
         nodes.push(
           <a key={key} href={mm[2]} target="_blank" rel="noopener noreferrer"
-             className="text-accent underline underline-offset-2 hover:opacity-80">
+             className="text-accent dark:text-dark-accent underline underline-offset-2 hover:opacity-80">
             {mm[1]}
           </a>
         );
@@ -92,7 +92,7 @@ export function Markdown({ content, className = "" }: { content: string; classNa
       i++; // skip closing fence
       blocks.push(
         <pre key={key++}
-             className="my-2 overflow-x-auto rounded-xl border border-line bg-foreground/5 p-3 font-mono text-[13px] leading-relaxed text-foreground">
+             className="my-2 overflow-x-auto rounded-xl border border-line dark:border-dark-line bg-foreground/5 dark:bg-white/5 p-3 font-mono text-[13px] leading-relaxed text-foreground">
           <code>{buf.join("\n")}</code>
         </pre>
       );
@@ -132,10 +132,10 @@ export function Markdown({ content, className = "" }: { content: string; classNa
       }
       const tkey = key++;
       blocks.push(
-        <div key={tkey} className="my-3 overflow-x-auto rounded-xl border border-line">
+        <div key={tkey} className="my-3 overflow-x-auto rounded-xl border border-line dark:border-dark-line">
           <table className="w-full border-collapse text-[13px]">
             <thead>
-              <tr className="border-b border-line bg-foreground/[0.06]">
+              <tr className="border-b border-line dark:border-dark-line bg-foreground/[0.06]">
                 {header.map((c, ci) => (
                   <th key={ci} className={`whitespace-nowrap px-3 py-2 font-bold uppercase tracking-tight text-foreground ${ALIGN[aligns[ci]] || "text-left"}`}>
                     {parseInline(c, `th${tkey}-${ci}`)}
@@ -145,7 +145,7 @@ export function Markdown({ content, className = "" }: { content: string; classNa
             </thead>
             <tbody>
               {rows.map((r, ri) => (
-                <tr key={ri} className="border-b border-line/40 last:border-0 even:bg-foreground/[0.02]">
+                <tr key={ri} className="border-b border-line dark:border-dark-line/40 last:border-0 even:bg-foreground/[0.02]">
                   {header.map((_, ci) => (
                     <td key={ci} className={`px-3 py-2 align-top text-foreground/90 ${ALIGN[aligns[ci]] || "text-left"}`}>
                       {parseInline(r[ci] ?? "", `td${tkey}-${ri}-${ci}`)}
@@ -161,14 +161,14 @@ export function Markdown({ content, className = "" }: { content: string; classNa
     }
 
     // Horizontal rule
-    if (isHr(line)) { blocks.push(<hr key={key++} className="my-3 border-line" />); i++; continue; }
+    if (isHr(line)) { blocks.push(<hr key={key++} className="my-3 border-line dark:border-dark-line" />); i++; continue; }
 
     // Blockquote
     if (isQuote(line)) {
       const buf: string[] = [];
       while (i < lines.length && isQuote(lines[i])) { buf.push(lines[i].replace(/^\s*>\s?/, "")); i++; }
       blocks.push(
-        <blockquote key={key++} className="my-2 border-l-2 border-accent pl-3 text-muted-foreground">
+        <blockquote key={key++} className="my-2 border-l-2 border-accent pl-3 text-muted-foreground dark:border-dark-accent dark:text-dark-muted">
           {parseInline(buf.join(" "), `q${key}`)}
         </blockquote>
       );
@@ -183,7 +183,7 @@ export function Markdown({ content, className = "" }: { content: string; classNa
         items.push(<li key={n} className="ml-1">{parseInline(lines[i].replace(/^\s*[-*+]\s+/, ""), `ul${key}-${n}`)}</li>);
         i++;
       }
-      blocks.push(<ul key={key++} className="my-2 list-disc space-y-1 pl-5 marker:text-accent">{items}</ul>);
+      blocks.push(<ul key={key++} className="my-2 list-disc space-y-1 pl-5 marker:text-accent dark:marker:text-dark-accent">{items}</ul>);
       continue;
     }
 
@@ -195,7 +195,7 @@ export function Markdown({ content, className = "" }: { content: string; classNa
         items.push(<li key={n} className="ml-1">{parseInline(lines[i].replace(/^\s*\d+[.)]\s+/, ""), `ol${key}-${n}`)}</li>);
         i++;
       }
-      blocks.push(<ol key={key++} className="my-2 list-decimal space-y-1 pl-5 marker:text-muted-foreground">{items}</ol>);
+      blocks.push(<ol key={key++} className="my-2 list-decimal space-y-1 pl-5 marker:text-muted-foreground dark:marker:text-dark-muted">{items}</ol>);
       continue;
     }
 

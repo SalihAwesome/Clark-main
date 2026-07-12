@@ -25,16 +25,16 @@ export function TraceDisclosure({ steps, busy }: { steps: TraceStep[]; busy: boo
       <button
         type="button"
         onClick={() => setOverride(!open)}
-        className="flex w-full items-center gap-2 rounded-xl border border-line bg-surface/40 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground backdrop-blur-sm transition-all duration-200 ease-expo-out hover:border-accent/60 hover:text-accent"
+        className="flex w-full items-center gap-2 rounded-xl border border-line bg-surface/40 px-3 py-2 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground backdrop-blur-sm transition-all duration-200 ease-expo-out hover:border-accent/60 hover:text-accent dark:border-dark-line dark:bg-dark-surface/40 dark:text-dark-muted dark:hover:border-dark-accent/60 dark:hover:text-dark-accent"
       >
         <Icon name="chevron-right" size={13} className={`transition-transform ${open ? "rotate-90" : ""}`} />
         {busy ? (
-          <span className="flex items-center gap-2 text-accent">
+          <span className="flex items-center gap-2 text-accent dark:text-dark-accent">
             Processing
             <span className="flex gap-1">
-              <span className="typing-dot h-1.5 w-1.5 rounded-full bg-accent" />
-              <span className="typing-dot h-1.5 w-1.5 rounded-full bg-accent" />
-              <span className="typing-dot h-1.5 w-1.5 rounded-full bg-accent" />
+              <span className="typing-dot h-1.5 w-1.5 rounded-full bg-accent dark:bg-dark-accent" />
+              <span className="typing-dot h-1.5 w-1.5 rounded-full bg-accent dark:bg-dark-accent" />
+              <span className="typing-dot h-1.5 w-1.5 rounded-full bg-accent dark:bg-dark-accent" />
             </span>
           </span>
         ) : (

@@ -27,15 +27,18 @@ module.exports = {
         sand: "#D6EDEC", // Lagoon Mist — info/teal tinted backgrounds
         line: "rgba(44,40,38,0.10)", // Warm Mist — borders
         "line-hover": "rgba(44,40,38,0.18)",
-        // Dark mode overrides (applied via .dark class on <html>)
-        "dark-bg": "#1C1816", // Warm Dark
-        "dark-surface": "#2B2521", // Toasted Dark
-        "dark-surface-raised": "#3C3430", // Warm Slate
+        // Dark mode overrides — "Midnight Tuxedo" (the original Clark aesthetic:
+        // pure-black body, navy surfaces, gold accent, applied via .dark on <html>)
+        "dark-bg": "#000000", // Pure black — body background
+        "dark-surface": "#1B2433", // Deep Navy — cards, panels, drawers
+        "dark-surface-raised": "#2A3850", // Raised Navy — hovered/active surfaces
         "dark-foreground": "#ECE6E0", // Dark Ink
         "dark-foreground-subtle": "rgba(236,230,224,0.4)",
-        "dark-muted": "#9C928C", // Dark Ink Subtle
-        "dark-line": "rgba(236,230,224,0.10)",
-        "dark-line-hover": "rgba(236,230,224,0.18)",
+        "dark-muted": "#AEB7C7", // Slate-gray — secondary text
+        "dark-line": "rgba(255,255,255,0.08)",
+        "dark-line-hover": "rgba(255,255,255,0.14)",
+        "dark-accent": "#B08D57", // Gold — accent in dark mode
+        "dark-accent-foreground": "#0B0F1A", // Navy text on gold
       },
       fontFamily: {
         display: ["var(--font-nunito)", "Nunito", "system-ui", "sans-serif"],

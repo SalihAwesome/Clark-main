@@ -100,7 +100,7 @@ export function ProfilePanel({
     <button
       onClick={() => setSection(id)}
       className={`flex flex-1 items-center justify-center gap-1.5 px-2 py-2 text-[11px] font-bold uppercase tracking-tight transition-all duration-200 ease-expo-out ${
-        section === id ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground"
+        section === id ? "bg-accent dark:bg-dark-accent text-accent-foreground dark:text-dark-accent-foreground" : "text-muted-foreground dark:text-dark-muted hover:text-foreground dark:hover:text-white"
       }`}
     >
       <Icon name={icon} size={13} /> {label}
@@ -110,19 +110,19 @@ export function ProfilePanel({
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
-      <aside className="animate-slide-in relative flex h-full w-full max-w-md flex-col border-s border-line bg-surface/95 backdrop-blur-xl">
-        <div className="flex items-center gap-3 border-b border-line px-5 py-4">
-          <span className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.2em] text-accent"><Icon name="id-card" size={16} /> My Information</span>
+      <aside className="animate-slide-in relative flex h-full w-full max-w-md flex-col border-s border-line dark:border-dark-line bg-surface/95 dark:bg-dark-surface/95 backdrop-blur-xl">
+        <div className="flex items-center gap-3 border-b border-line dark:border-dark-line px-5 py-4">
+          <span className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name="id-card" size={16} /> My Information</span>
           <button
             onClick={onClose}
-            className="ms-auto flex h-8 w-8 items-center justify-center rounded-lg border border-line text-muted-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon"
+            className="ms-auto flex h-8 w-8 items-center justify-center rounded-lg border border-line dark:border-dark-line text-muted-foreground dark:text-dark-muted transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon"
             title="Close"
           >
             <Icon name="x" size={15} />
           </button>
         </div>
 
-        <div className="flex gap-0.5 border-b border-line p-1">
+        <div className="flex gap-0.5 border-b border-line dark:border-dark-line p-1">
           {tab("info", "id-card", "My Info")}
           {tab("payment", "credit-card", "Payment")}
           {tab("credentials", "key", "Credentials")}
@@ -131,9 +131,9 @@ export function ProfilePanel({
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {section === "info" && (
             <>
-              <div className="mb-5 rounded-xl border border-dashed border-line bg-bg/40 p-4">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent"><Icon name="upload" size={13} /> Upload ID</div>
-                <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+              <div className="mb-5 rounded-xl border border-dashed border-line dark:border-dark-line bg-bg/40 dark:bg-black/40 p-4">
+                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name="upload" size={13} /> Upload ID</div>
+                <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground dark:text-dark-muted">
                   Upload a photo of your ID card and the agent will read it and fill the fields below automatically.
                 </p>
                 <input ref={fileRef} type="file" accept="image/*" className="hidden"
@@ -141,12 +141,12 @@ export function ProfilePanel({
                 <button
                   onClick={() => fileRef.current?.click()}
                   disabled={extracting}
-                  className="mt-3 w-full rounded-xl border border-accent/60 px-4 py-2.5 text-xs font-bold uppercase tracking-tight text-accent transition-all duration-200 ease-expo-out hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
+                  className="mt-3 w-full rounded-xl border border-accent/60 dark:border-dark-accent/60 px-4 py-2.5 text-xs font-bold uppercase tracking-tight text-accent dark:text-dark-accent transition-all duration-200 ease-expo-out hover:bg-accent dark:hover:bg-dark-accent hover:text-accent-foreground dark:hover:text-dark-accent-foreground disabled:opacity-50"
                 >
                   {extracting ? "Reading ID…" : "Choose ID image"}
                 </button>
                 {detected && (
-                  <p className={`mt-2 text-[11px] ${detected.length ? "text-accent" : "text-muted-foreground"}`}>
+                  <p className={`mt-2 text-[11px] ${detected.length ? "text-accent dark:text-dark-accent" : "text-muted-foreground dark:text-dark-muted"}`}>
                     {detected.length
                       ? `Detected & filled: ${detected.join(", ")}`
                       : "No fields could be read — try a clearer photo or enter them below."}
@@ -157,15 +157,15 @@ export function ProfilePanel({
               <div className="space-y-4">
                 {fields.map((f) => (
                   <div key={f.key}>
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground dark:text-dark-muted">
                       {f.label}
-                      {f.format && <span className="ms-2 lowercase tracking-normal text-muted-foreground/60">({f.format})</span>}
+                      {f.format && <span className="ms-2 lowercase tracking-normal text-muted-foreground/60 dark:text-dark-muted/60">({f.format})</span>}
                     </label>
                     <input
                       type={f.type === "date" ? "date" : f.type === "email" ? "email" : f.type === "tel" ? "tel" : "text"}
                       value={draft[f.key] || ""}
                       onChange={(e) => setDraft((d) => ({ ...d, [f.key]: e.target.value }))}
-                      className="mt-1 w-full border-b border-line bg-transparent px-0 py-2 text-sm text-foreground focus:border-accent focus:outline-none"
+                      className="mt-1 w-full border-b border-line dark:border-dark-line bg-transparent px-0 py-2 text-sm text-foreground dark:text-white focus:border-accent dark:focus:border-dark-accent focus:outline-none"
                     />
                   </div>
                 ))}
@@ -175,13 +175,13 @@ export function ProfilePanel({
 
           {section === "payment" && (
             <>
-              <p className="mb-4 text-[11px] leading-relaxed text-muted-foreground">
+              <p className="mb-4 text-[11px] leading-relaxed text-muted-foreground dark:text-dark-muted">
                 Optional. When a task needs a payment (e.g. paying a fine), the agent uses this card to fill the checkout form. Stored locally only — never sent to the AI.
               </p>
               <div className="space-y-4">
                 {paymentFields.map((f) => (
                   <div key={f.key}>
-                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{f.label}</label>
+                    <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground dark:text-dark-muted">{f.label}</label>
                     <input
                       type={f.secret && !revealCard ? "password" : f.type === "tel" ? "tel" : "text"}
                       inputMode={f.key === "card_number" || f.key === "cvv" ? "numeric" : undefined}
@@ -189,18 +189,18 @@ export function ProfilePanel({
                       placeholder={f.placeholder || ""}
                       value={card[f.key] || ""}
                       onChange={(e) => onCardChange(f.key, e.target.value)}
-                      className="mt-1 w-full border-b border-line bg-transparent px-0 py-2 text-sm text-foreground placeholder-muted-foreground/50 focus:border-accent focus:outline-none"
+                      className="mt-1 w-full border-b border-line dark:border-dark-line bg-transparent px-0 py-2 text-sm text-foreground dark:text-white placeholder-muted-foreground/50 dark:placeholder-dark-muted/50 focus:border-accent dark:focus:border-dark-accent focus:outline-none"
                     />
                   </div>
                 ))}
               </div>
-              <label className="mt-5 flex cursor-pointer items-center gap-2 text-[11px] text-muted-foreground">
+              <label className="mt-5 flex cursor-pointer items-center gap-2 text-[11px] text-muted-foreground dark:text-dark-muted">
                 <input type="checkbox" checked={revealCard} onChange={(e) => setRevealCard(e.target.checked)} className="accent-accent" />
                 Show card number & CVV
               </label>
               <button
                 onClick={() => { setCard({}); onSavePayment({}); }}
-                className="mt-4 w-full rounded-xl border border-line px-4 py-2 text-[11px] font-bold uppercase tracking-tight text-muted-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon"
+                className="mt-4 w-full rounded-xl border border-line dark:border-dark-line px-4 py-2 text-[11px] font-bold uppercase tracking-tight text-muted-foreground dark:text-dark-muted transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon"
               >
                 Remove saved card
               </button>
@@ -217,17 +217,17 @@ export function ProfilePanel({
         </div>
 
         {section !== "credentials" && (
-          <div className="flex items-center gap-2 border-t border-line px-5 py-4">
+          <div className="flex items-center gap-2 border-t border-line dark:border-dark-line px-5 py-4">
             <button
               onClick={section === "payment" ? savePayment : saveInfo}
               disabled={saving}
-              className="flex-1 rounded-xl bg-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
+              className="flex-1 rounded-xl bg-accent dark:bg-dark-accent px-4 py-3 text-sm font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95 disabled:opacity-50"
             >
               {saving ? "Saving…" : saved ? "Saved" : section === "payment" ? "Save Card" : "Save"}
             </button>
             <button
               onClick={onClose}
-              className="rounded-xl border border-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground transition-all duration-200 ease-expo-out hover:border-accent/60"
+              className="rounded-xl border border-line dark:border-dark-line px-4 py-3 text-sm font-bold uppercase tracking-tight text-foreground dark:text-white transition-all duration-200 ease-expo-out hover:border-accent/60 dark:hover:border-dark-accent/60"
             >
               Done
             </button>
@@ -257,12 +257,12 @@ function CredentialsSection({
 
   return (
     <>
-      <p className="mb-4 text-[11px] leading-relaxed text-muted-foreground">
+      <p className="mb-4 text-[11px] leading-relaxed text-muted-foreground dark:text-dark-muted">
         Saved logins (like a password manager). When the agent needs to sign in to a saved site, it uses these automatically. Stored locally only — never sent to the AI.
       </p>
 
       {credentials.length === 0 && (
-        <p className="mb-4 text-[11px] text-muted-foreground/60">
+        <p className="mb-4 text-[11px] text-muted-foreground/60 dark:text-dark-muted/60">
           No saved logins yet. When the agent logs you in, tick "Remember this login", or add one below.
         </p>
       )}
@@ -271,17 +271,17 @@ function CredentialsSection({
         {credentials.map((c) => {
           const row = rowOf(c);
           return (
-            <div key={c.host} className="rounded-xl border border-line bg-bg/40 p-3">
+            <div key={c.host} className="rounded-xl border border-line dark:border-dark-line bg-bg/40 dark:bg-black/40 p-3">
               <div className="flex items-center gap-2">
                 <span className="truncate text-[12px] font-bold text-foreground" title={c.url}>{c.label || c.host}</span>
-                <span className="ms-auto shrink-0 text-[10px] text-muted-foreground/50">{c.host}</span>
+                <span className="ms-auto shrink-0 text-[10px] text-muted-foreground/50 dark:text-dark-muted/50">{c.host}</span>
               </div>
               <input
                 value={row.username}
                 placeholder="username"
                 autoComplete="off"
                 onChange={(e) => setEdit((s) => ({ ...s, [c.host]: { ...row, username: e.target.value } }))}
-                className="mt-2 w-full border-b border-line bg-transparent px-0 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none"
+                className="mt-2 w-full border-b border-line dark:border-dark-line bg-transparent px-0 py-1.5 text-sm text-foreground dark:text-white focus:border-accent dark:focus:border-dark-accent focus:outline-none"
               />
               <div className="mt-1 flex items-center gap-2">
                 <input
@@ -290,11 +290,11 @@ function CredentialsSection({
                   placeholder="password"
                   autoComplete="off"
                   onChange={(e) => setEdit((s) => ({ ...s, [c.host]: { ...row, password: e.target.value } }))}
-                  className="w-full border-b border-line bg-transparent px-0 py-1.5 text-sm text-foreground focus:border-accent focus:outline-none"
+                  className="w-full border-b border-line dark:border-dark-line bg-transparent px-0 py-1.5 text-sm text-foreground dark:text-white focus:border-accent dark:focus:border-dark-accent focus:outline-none"
                 />
                 <button
                   onClick={() => setReveal((r) => ({ ...r, [c.host]: !r[c.host] }))}
-                  className="shrink-0 text-[10px] uppercase text-muted-foreground hover:text-accent"
+                  className="shrink-0 text-[10px] uppercase text-muted-foreground dark:text-dark-muted hover:text-accent dark:hover:text-dark-accent"
                   title="Show / Hide"
                 >
                   {reveal[c.host] ? "Hide" : "Show"}
@@ -303,13 +303,13 @@ function CredentialsSection({
               <div className="mt-3 flex gap-2">
                 <button
                   onClick={() => onSave({ host: c.host, url: c.url, label: c.label, username: row.username, password: row.password })}
-                  className="flex-1 rounded-lg bg-accent px-3 py-2 text-[11px] font-bold uppercase tracking-tight text-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95"
+                  className="flex-1 rounded-lg bg-accent dark:bg-dark-accent px-3 py-2 text-[11px] font-bold uppercase tracking-tight text-accent-foreground dark:text-dark-accent-foreground transition-all duration-200 ease-expo-out hover:opacity-90 active:scale-95"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => onDelete(c.host)}
-                  className="rounded-lg border border-line px-3 py-2 text-[11px] font-bold uppercase tracking-tight text-muted-foreground transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon"
+                  className="rounded-lg border border-line dark:border-dark-line px-3 py-2 text-[11px] font-bold uppercase tracking-tight text-muted-foreground dark:text-dark-muted transition-all duration-200 ease-expo-out hover:border-maroon hover:text-maroon"
                 >
                   Delete
                 </button>
@@ -319,8 +319,8 @@ function CredentialsSection({
         })}
       </div>
 
-      <div className="mt-5 rounded-xl border border-dashed border-line bg-bg/40 p-3">
-        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent"><Icon name="plus" size={13} /> Add a login</div>
+      <div className="mt-5 rounded-xl border border-dashed border-line dark:border-dark-line bg-bg/40 dark:bg-black/40 p-3">
+        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-accent dark:text-dark-accent"><Icon name="plus" size={13} /> Add a login</div>
         {(["url", "username", "password", "label"] as const).map((k) => (
           <input
             key={k}
@@ -329,7 +329,7 @@ function CredentialsSection({
             autoComplete="off"
             value={adding[k]}
             onChange={(e) => setAdding((a) => ({ ...a, [k]: e.target.value }))}
-            className="mt-2 w-full border-b border-line bg-transparent px-0 py-1.5 text-sm text-foreground placeholder-muted-foreground/50 focus:border-accent focus:outline-none"
+            className="mt-2 w-full border-b border-line dark:border-dark-line bg-transparent px-0 py-1.5 text-sm text-foreground dark:text-white placeholder-muted-foreground/50 dark:placeholder-dark-muted/50 focus:border-accent dark:focus:border-dark-accent focus:outline-none"
           />
         ))}
         <button
@@ -338,7 +338,7 @@ function CredentialsSection({
             await onSave(adding);
             setAdding({ url: "", username: "", password: "", label: "" });
           }}
-          className="mt-3 w-full rounded-xl border border-accent/60 px-4 py-2 text-[11px] font-bold uppercase tracking-tight text-accent transition-all duration-200 ease-expo-out hover:bg-accent hover:text-accent-foreground"
+          className="mt-3 w-full rounded-xl border border-accent/60 dark:border-dark-accent/60 px-4 py-2 text-[11px] font-bold uppercase tracking-tight text-accent dark:text-dark-accent transition-all duration-200 ease-expo-out hover:bg-accent dark:hover:bg-dark-accent hover:text-accent-foreground dark:hover:text-dark-accent-foreground"
         >
           Add login
         </button>
