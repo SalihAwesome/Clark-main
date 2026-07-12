@@ -37,7 +37,6 @@ server_*.txt
 # ── Start scripts (local convenience only) ─────────────────────────
 START.bat
 start-chrome-debug.bat
-scripts/
 
 # ── Design / build artifacts ───────────────────────────────────────
 clark-hackathon-deck.html
@@ -45,18 +44,31 @@ docs/superpowers/specs/
 DESIGN.md
 PRODUCT.md
 
-# ── Test / debug screenshots ───────────────────────────────────────
+# ── Test / debug screenshots & snapshots ───────────────────────────
 dark-mode-fullpage.png
 dark-viewport.jpeg
+frontend/dark-mode-fullpage.png
+frontend/dark-mode-viewport.png
+page-snapshot.yml
 
 # ── Personal tool configs ──────────────────────────────────────────
 .claude/
 .impeccable/
 .playwright-mcp/
 
-# ── Skyvern temp data ──────────────────────────────────────────────
+# ── Skyvern runtime data & secrets ─────────────────────────────────
 skyvern/temp/
+skyvern/har/
+skyvern/log/
+skyvern/video/
 skyvern/*.session_cookies.json
+skyvern/.skyvern_api_key
+
+# ── Duplicate / redundant root files ───────────────────────────────
+logo.png
+
+# ── Build artifacts ────────────────────────────────────────────────
+frontend/tsconfig.tsbuildinfo
 
 # ── Editor / OS files ──────────────────────────────────────────────
 .history/
