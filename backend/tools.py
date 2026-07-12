@@ -33,7 +33,7 @@ from defusedxml import ElementTree as ET
 from typing import Any, Callable
 
 import httpx
-from ddgs import DDGS
+from duckduckgo_search import DDGS
 
 from browser_session import BrowserSession, get_session
 

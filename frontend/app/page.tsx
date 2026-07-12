@@ -172,7 +172,14 @@ export default function Home() {
       case "delta": updateLast((m) => ({ ...m, content: m.content + evt.content })); break;
       case "thought": updateLast((m) => ({ ...m, trace: [...(m.trace ?? []), { type: "thought", content: evt.content }] })); break;
       case "action": updateLast((m) => ({ ...m, trace: [...(m.trace ?? []), { type: "action", tool: evt.tool, input: evt.input }] })); break;
-      case "observation": updateLast((m) => ({ ...m, trace: [...(m.trace ?? []), { type: "observation", tool: evt.tool, result: evt.result }] })); break;
+      case "observation": updateLast((m) => {
+        const updated: any = { ...m, trace: [...(m.trace ?? []), { type: "observation", tool: evt.tool, result: evt.result }] };
+        if (evt.tool === "save_document" && evt.result?.saved_to) {
+          const parts = (evt.result.saved_to as string).split(/[/\\]/);
+          updated.files = [...(m.files ?? []), { name: parts[parts.length - 1], bytes: (evt.result.bytes as number) || 0 }];
+        }
+        return updated;
+      }); break;
       case "screenshot":
         setShot({ url: evt.url, page_url: evt.page_url, title: evt.title });
         updateLast((m) => ({ ...m, trace: [...(m.trace ?? []), { type: "screenshot", url: evt.url, page_url: evt.page_url, title: evt.title }] }));
@@ -410,8 +417,30 @@ export default function Home() {
                         {m.trace && m.trace.length > 0 && (
                           <TraceDisclosure steps={m.trace} busy={busy && i === messages.length - 1} />
                         )}
+                        {m.files && m.files.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {m.files.map((f) => (
+                              <a
+                                key={f.name}
+                                href={`/api/workspace/download/${encodeURIComponent(f.name)}`}
+                                download={f.name}
+                                className="group flex items-center gap-2.5 rounded-xl border border-accent/25 bg-accent/[0.05] px-3.5 py-2.5 text-xs text-foreground transition-all duration-200 ease-expo-out hover:border-accent/50 hover:bg-accent/[0.12] hover:shadow-[0_2px_8px_-2px_rgba(176,141,87,0.2)]"
+                              >
+                                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent/20 bg-accent/[0.08] text-accent transition-all duration-200 group-hover:bg-accent/[0.14]">
+                                  <Icon name="download" size={13} />
+                                </span>
+                                <span className="flex flex-col">
+                                  <span className="font-medium leading-tight">{f.name}</span>
+                                  <span className="text-[10px] text-muted-foreground/60">
+                                    {(f.bytes / 1024).toFixed(1)} KB
+                                  </span>
+                                </span>
+                              </a>
+                            ))}
+                          </div>
+                        )}
                         {m.content ? (
-                          <div className={m.trace?.length ? "mt-2" : ""}>
+                          <div className={(m.trace?.length || (m.files?.length ?? 0) > 0) ? "mt-2" : ""}>
                             <Markdown content={m.content} />
                           </div>
                         ) : busy ? (

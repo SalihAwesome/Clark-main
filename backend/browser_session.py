@@ -604,7 +604,7 @@ class BrowserSession:
         return {
             "url": page.url,
             "title": _safe(lambda: page.title()),
-            "text": text[:4000],
+            "text": text[:15000],
             "screenshot": self._save_shot(),
             "has_login": self._detect_login(),
             "page_error": self._detect_error(),

@@ -6,7 +6,7 @@ export type IconName =
   | "chevron-right" | "check" | "maximize" | "x" | "dot" | "key" | "lock" | "hash"
   | "receipt" | "shield-check" | "clipboard" | "pencil" | "monitor" | "globe"
   | "id-card" | "credit-card" | "upload" | "plus" | "clock" | "message" | "bot"
-  | "trash" | "arrow-left" | "user" | "eye" | "mic" | "alert";
+  | "trash" | "arrow-left" | "user" | "eye" | "mic" | "alert" | "download";
 
 const PATHS: Record<IconName, JSX.Element> = {
   "chevron-right": <path d="m9 18 6-6-6-6" />,
@@ -36,6 +36,7 @@ const PATHS: Record<IconName, JSX.Element> = {
   eye: <><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></>,
   mic: <><rect x="9" y="2" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8" /></>,
   alert: <><path d="M12 9v4M12 17h.01" /><path d="M10.3 3.3 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.3a2 2 0 0 0-3.4 0Z" /></>,
+  download: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" /></>,
 };
 
 export function Icon({ name, size = 16, className = "", ...rest }: { name: IconName; size?: number; className?: string } & SVGProps<SVGSVGElement>) {

@@ -93,4 +93,5 @@ export interface ChatMsg {
   role: "user" | "assistant";
   content: string;
   trace?: TraceStep[];
+  files?: { name: string; bytes: number }[];
 }

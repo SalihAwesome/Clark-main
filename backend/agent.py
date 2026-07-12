@@ -51,7 +51,7 @@ RULES:
 2. NEVER open article/research paper pages — they load minimal text (truncated). Use web_search for snippets, or arxiv_search for full abstracts.
 3. If "blocked" or "truncated" appears, move on immediately with what you have.
 4. Forms/registration: navigate → see_page → fill marks → submit. Use demoqa.com/automation-practice-form for testing forms, or the-internet.herokuapp.com/login for login forms. Use pause_for_user for CAPTCHA.
-5. Research papers: arxiv_search(paper_id=...) returns the full abstract. Wikipedia: open_page → see_page → read → save_document().
+5. Research papers: arxiv_search(paper_id=...) returns the full abstract. Wikipedia: open_page ONCE → see_page → read the provided content — it is clipped to ~15K chars but that is enough. Do NOT try mobile/printable/simple Wikipedia variants; they also clip. If you need the full text, web_search for "Wikipedia article on X" and compile a summary from snippets.
 6. Do what the user asks. If they ask you to "save a document" or "save a summary as a document", call save_document(filename, content). Do NOT ask "what would you like me to do next" — just do it. Do NOT inline-summarize without calling the tool.
 7. Near step {MAX_STEPS-2}/{MAX_STEPS}: deliver a partial final_answer with whatever you have.
 8. NEVER output prose, markdown, or thinking — only JSON. Do NOT have a conversation. Do NOT ask the user what to do next.
@@ -113,9 +113,9 @@ def _trim(result: dict[str, Any]) -> dict[str, Any]:
         out["elements"] = [{"n": e.get("n"), "t": (e.get("type") or e.get("tag")),
                             "label": (e.get("label") or "")[:28]} for e in out["elements"][:22]]
         if "text" in out:
-            out["text"] = (out["text"] or "")[:500]
-    elif isinstance(out.get("text"), str) and len(out["text"]) > 800:
-        out["text"] = out["text"][:800] + " …"
+            out["text"] = (out["text"] or "")[:1200]
+    elif isinstance(out.get("text"), str) and len(out["text"]) > 3000:
+        out["text"] = out["text"][:3000] + " …"
     if isinstance(out.get("understanding"), str) and len(out["understanding"]) > 400:
         out["understanding"] = out["understanding"][:400] + " …"
     return out
@@ -360,7 +360,7 @@ class AgentRun:
                     self.messages.append({"role": "assistant", "content": json.dumps(decision, ensure_ascii=False)})
                     self.messages.append({"role": "user", "content": "Do NOT answer from memory. Use a tool first — tool-call JSON now:\n{\"thought\":\"...\",\"action\":\"web_search\",\"action_input\":{\"query\":\"...\"}}"})
                     continue
-                yield from self._stream_final(str(decision["final_answer"]))
+                yield from self._grounded_final(str(decision["final_answer"]))
                 return
 
             tool = decision.get("action")
@@ -385,7 +385,7 @@ class AgentRun:
                     final_raw = ""
                 final_dec = _extract_json(final_raw)
                 if final_dec and "final_answer" in final_dec:
-                    yield from self._stream_final(str(final_dec["final_answer"]))
+                    yield from self._grounded_final(str(final_dec["final_answer"]))
                 else:
                     yield {"type": "final", "content": "I wasn't able to find enough information to give a useful answer. Try rephrasing your request or starting a new session."}
                 return
@@ -483,7 +483,7 @@ class AgentRun:
         prompt = ("Based ONLY on the following page content, answer the user's original request. "
                   "Be factual and concise. Do NOT use any outside knowledge.\n\n"
                   f"Original request: {self._last_user}\n\n"
-                  f"Page content:\n{text[:4000]}")
+                  f"Page content:\n{text[:3000]}")
         try:
             answer = self.client.chat(
                 [{"role": "system", "content": "You answer based only on the given text. Be concise."},
@@ -494,9 +494,87 @@ class AgentRun:
         yield {"type": "delta", "content": answer}
         yield {"type": "final", "content": answer}
 
-    def _stream_final(self, model_answer: str) -> Iterator[dict[str, Any]]:
-        """Stream the final answer from the LLM."""
-        answer = model_answer
+    def _grounded_final(self, model_final: str) -> Iterator[dict[str, Any]]:
+        """Generate a final answer grounded in actual tool calls, not model memory.
+
+        The LLM tends to hallucinate what it *thinks* it filled when writing its own
+        final_answer (e.g. saying "pizza" when it actually filled "cake"). This method
+        extracts the actual tool-call arguments from the conversation and uses them as
+        the sole source of truth.
+        """
+        # Collect actual tool calls from the assistant messages.
+        actions_made: list[dict[str, Any]] = []
+        for m in self.messages:
+            if m["role"] == "assistant":
+                try:
+                    dec = json.loads(m["content"])
+                    if dec.get("action") and dec.get("action_input"):
+                        actions_made.append(dec)
+                except (json.JSONDecodeError, TypeError):
+                    pass
+
+        if not actions_made:
+            yield {"type": "delta", "content": model_final}
+            yield {"type": "final", "content": model_final}
+            return
+
+        fact_lines: list[str] = ["Actions taken:"]
+        for a in actions_made:
+            tool = a.get("action", "")
+            args = a.get("action_input", {})
+            if tool == "fill_mark":
+                fact_lines.append(f"  · Filled box #{args.get('n')} with: \"{args.get('text', '')}\"")
+            elif tool == "fill_date":
+                fact_lines.append(f"  · Filled date field #{args.get('n')} with: \"{args.get('text', '')}\"")
+            elif tool == "fill_text_smart":
+                fact_lines.append(f"  · Filled \"{args.get('value', '')}\" into field matching {args.get('synonyms', '')}")
+            elif tool == "fill_date_smart":
+                fact_lines.append(f"  · Filled date \"{args.get('value', '')}\" into field matching {args.get('synonyms', '')}")
+            elif tool in ("submit_form", "click_smart"):
+                fact_lines.append(f"  · {tool}()")
+            elif tool == "click_mark":
+                fact_lines.append(f"  · Clicked box #{args.get('n')}")
+            elif tool == "fill_login":
+                fact_lines.append("  · Filled login form with stored credentials")
+            elif tool == "open_page":
+                fact_lines.append(f"  · Navigated to: {args.get('url', '')}")
+            elif tool == "web_search":
+                fact_lines.append(f"  · Searched for: \"{args.get('query', '')}\"")
+            elif tool == "arxiv_search":
+                pid = args.get("paper_id", "")
+                q = args.get("query", "")
+                fact_lines.append(f"  · Searched arXiv: \"{q or pid}\"")
+            elif tool == "save_document":
+                fact_lines.append(f"  · Saved document: \"{args.get('filename', '')}\" ({len(args.get('content', ''))} chars)")
+            elif tool == "read_page":
+                fact_lines.append("  · Read current page content")
+            elif tool == "see_page":
+                fact_lines.append("  · Looked at current page visually (screenshot)")
+            elif tool == "fill_field":
+                fact_lines.append(f"  · Filled field \"{args.get('field', '')}\" = \"{args.get('value', '')}\"")
+            elif tool == "click":
+                fact_lines.append(f"  · Clicked: \"{args.get('target', '')}\"")
+
+        facts = "\n".join(fact_lines)
+
+        prompt = (
+            "Based ONLY on the actual actions listed below, answer the user's request accurately.\n"
+            "Use the EXACT field values shown in the actions — do NOT substitute or guess.\n"
+            "If fields were filled, state exactly what value went where.\n\n"
+            f"User request: {self._last_user}\n\n"
+            f"{facts}\n\n"
+            "Your concise answer:"
+        )
+
+        try:
+            answer = self.client.chat(
+                [{"role": "system", "content": "You give grounded answers based only on the provided data. Be precise and truthful."},
+                 {"role": "user", "content": prompt}],
+                temperature=0.05, max_tokens=400)
+        except LLMError:
+            # Fall back to the raw action log — no LLM needed, just the data
+            answer = "Here's what I did:\n" + facts
+
         yield {"type": "delta", "content": answer}
         yield {"type": "final", "content": answer}
 

@@ -342,6 +342,18 @@ def session_close(req: ResumeRequest) -> dict[str, Any]:
     return {"closed": close_session(req.session_id), "session_id": req.session_id}
 
 
+@app.get("/api/workspace/download/{name:path}")
+def workspace_download(name: str) -> FileResponse:
+    """Download a saved file from the agent workspace."""
+    target = (WORKSPACE / name).resolve()
+    if WORKSPACE not in target.parents and target != WORKSPACE:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    if not target.is_file():
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(target, filename=target.name, media_type="application/octet-stream",
+                        headers={"Content-Disposition": f'attachment; filename="{target.name}"'})
+
+
 @app.get("/api/workspace")
 def list_workspace() -> dict[str, Any]:
     files = [{"name": p.name, "bytes": p.stat().st_size} for p in sorted(WORKSPACE.glob("*")) if p.is_file()]
