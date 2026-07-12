@@ -13,7 +13,7 @@ export function Marquee({
   return (
     <div
       className={`overflow-hidden border-y border-line backdrop-blur-sm ${
-        invert ? "bg-accent text-accent-foreground" : "bg-surface/30 text-muted-foreground"
+        invert ? "bg-primary text-white" : "bg-surface/30 text-muted-foreground"
       }`}
     >
       <div className={`marquee-track ${fast ? "animate-marquee-fast" : "animate-marquee"}`}>
@@ -23,7 +23,7 @@ export function Marquee({
             className="flex items-center gap-5 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.25em]"
           >
             {item}
-            <span className={invert ? "text-accent-foreground/60" : "text-accent"}>✦</span>
+            <span className={invert ? "text-white/60" : "text-primary"}>✦</span>
           </span>
         ))}
       </div>

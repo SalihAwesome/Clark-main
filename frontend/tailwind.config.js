@@ -1,41 +1,64 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        // Clark "Midnight Tuxedo" formal palette.
-        // Token names are unchanged from the old kinetic theme so the whole app
-        // re-skins from here; only the values move to the dark-navy + gold system.
-        bg: "#0B0F1A", // darkest navy — structural fills (body itself is pure black)
-        surface: "#1B2433", // elevated surface (panels, drawers, cards)
-        muted: "#2E3A4F", // medium blue-gray — faint surfaces, dim text, icons
-        "muted-foreground": "#AEB7C7", // slate-gray secondary text
-        foreground: "#FFFFFF", // primary text
-        "foreground-subtle": "rgba(255,255,255,0.5)", // faint labels / numerals
-        accent: "#B08D57", // golden / bronze — the single primary accent
-        "accent-foreground": "#0B0F1A", // near-black text on gold
-        maroon: "#B7707F", // muted rose — destructive / error / stop (kept formal)
-        sand: "#E9E2D0", // warm sand — paused / awaiting accents
-        line: "rgba(255,255,255,0.08)", // borders are always white @ 8%
-        "line-hover": "rgba(255,255,255,0.14)",
+        // Clark "Clay & Cotton" warm palette.
+        // Light mode: warm cream paper base, terracotta primary, teal accent.
+        // Dark mode: warm charcoal base, same primaries adjusted for contrast.
+        bg: "#F7F4EE", // Warm Paper — body background
+        surface: "#EFE8DE", // Toasted Cream — cards, panels, drawers
+        "surface-raised": "#E0D6C8", // Warm Linen — hovered/active surfaces
+        muted: "#7A7069", // Warm Stone — secondary text, placeholders
+        "muted-foreground": "#7A7069", // alias for backwards compat
+        foreground: "#2C2826", // Warm Charcoal — primary text
+        "foreground-subtle": "rgba(44,40,38,0.45)",
+        accent: "#3B8E8C", // Lagoon — interactive: buttons, links, active states
+        "accent-foreground": "#FFFFFF", // white text on teal
+        "accent-deep": "#2E7371", // Deep Teal — hover state for interactive
+        primary: "#C96A4D", // Baked Clay — decorative surfaces, headers, warmth
+        "primary-deep": "#B05439", // Terracotta Dusk — hover state
+        "primary-subtle": "#F5E4DC", // Clay Mist — tinted backgrounds
+        maroon: "#C4554A", // Rose Clay — error / stop / destructive
+        cta: "#D4973A", // Honey Gold — high-value CTA only
+        "cta-subtle": "#F5E8D0", // Honey Mist
+        sand: "#D6EDEC", // Lagoon Mist — info/teal tinted backgrounds
+        line: "rgba(44,40,38,0.10)", // Warm Mist — borders
+        "line-hover": "rgba(44,40,38,0.18)",
+        // Dark mode overrides (applied via .dark class on <html>)
+        "dark-bg": "#1C1816", // Warm Dark
+        "dark-surface": "#2B2521", // Toasted Dark
+        "dark-surface-raised": "#3C3430", // Warm Slate
+        "dark-foreground": "#ECE6E0", // Dark Ink
+        "dark-foreground-subtle": "rgba(236,230,224,0.4)",
+        "dark-muted": "#9C928C", // Dark Ink Subtle
+        "dark-line": "rgba(236,230,224,0.10)",
+        "dark-line-hover": "rgba(236,230,224,0.18)",
       },
       fontFamily: {
-        display: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        display: ["var(--font-nunito)", "Nunito", "system-ui", "sans-serif"],
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
       },
       letterSpacing: {
         tightest: "-0.03em",
+        wide: "0.06em",
       },
       transitionTimingFunction: {
         "expo-out": "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       boxShadow: {
-        // Soft elevation used by spotlight cards on hover.
-        card: "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 18px 50px -20px rgba(0,0,0,0.8)",
-        "card-hover": "0 0 0 1px rgba(255,255,255,0.12), 0 8px 40px rgba(0,0,0,0.7), 0 0 60px rgba(176,141,87,0.10)",
-        // Gold halo for primary actions (send button, active mode toggle).
-        "accent-glow": "0 0 0 1px rgba(176,141,87,0.5), 0 4px 12px rgba(176,141,87,0.3), inset 0 1px 0 0 rgba(255,255,255,0.15)",
+        // Warm-toned ambient shadows
+        card: "0 2px 8px rgba(44,40,38,0.06)",
+        "card-hover": "0 4px 16px rgba(44,40,38,0.08), 0 1px 3px rgba(44,40,38,0.06)",
+        modal: "0 8px 32px rgba(44,40,38,0.12), 0 2px 8px rgba(44,40,38,0.08)",
+        // Teal accent glow for focus rings
+        "accent-glow":
+          "0 0 0 2px rgba(59,142,140,0.3), 0 0 20px rgba(59,142,140,0.15)",
+        // Gold CTA glow
+        "cta-glow":
+          "0 0 0 2px rgba(212,151,58,0.3), 0 0 20px rgba(212,151,58,0.15)",
       },
       keyframes: {
         marquee: {

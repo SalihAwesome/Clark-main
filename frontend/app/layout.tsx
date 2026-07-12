@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { Inter } from "next/font/google";
+import { Inter, Nunito } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,10 +10,18 @@ const inter = Inter({
   display: "swap",
 });
 
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-nunito",
+  display: "swap",
+});
+
 // WebGL mesh-gradient background — client-only (needs WebGL, no SSR).
 const MeshBackground = dynamic(() => import("@/components/ui/MeshBackground"), { ssr: false });
 
 export const metadata: Metadata = {
+  icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
   title: "Clark — General-purpose Web Agent",
   description:
     "An autonomous web agent that drives a real browser: searches, fills forms, logs in, extracts data, and saves documents — powered by Gemini AI.",
@@ -21,8 +29,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-black font-sans">
+    <html lang="en" className={`${inter.variable} ${nunito.variable}`}>
+      <body className="min-h-screen bg-[#F7F4EE] font-sans text-[#2C2826] dark:bg-[#1C1816] dark:text-[#ECE6E0]">
         {/* Animated mesh-gradient background */}
         <div className="fixed inset-0 -z-10">
           <MeshBackground />

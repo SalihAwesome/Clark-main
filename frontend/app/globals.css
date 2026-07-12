@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light dark;
 }
 
 html,
@@ -11,67 +11,72 @@ body {
   height: 100%;
 }
 
-/* Clark: pure-black base — the animated mesh shader sits behind everything. */
-body {
-  background-color: #000000;
-  color: #ffffff;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-
 ::selection {
-  background: #b08d57;
-  color: #000000;
+  background: #c96a4d;
+  color: #ffffff;
 }
 
-/* Refined scrollbar (navy track, gold thumb) */
+/* Refined scrollbar (warm surface, terracotta thumb) */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0f1a;
+  background: #efe8de;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #2b2521;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid #0b0f1a;
+  background: rgba(44, 40, 38, 0.15);
+  border: 2px solid #efe8de;
   border-radius: 999px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(236, 230, 224, 0.12);
+  border-color: #2b2521;
+}
 ::-webkit-scrollbar-thumb:hover {
-  background: #b08d57;
+  background: #c96a4d;
 }
 
 /* Hide the scrollbar on a specific container while keeping it scrollable */
 .no-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* legacy Edge/IE */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .no-scrollbar::-webkit-scrollbar {
-  display: none; /* WebKit (Chrome/Safari/Edge) */
+  display: none;
 }
 
-/* Fine noise texture overlay (Clark: ~1.5%) */
+/* Fine noise texture overlay (Clark: ~1.2%) */
 .noise {
   position: fixed;
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.015;
+  opacity: 0.012;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.8'/%3E%3C/svg%3E");
 }
 
-/* Subtle grid overlay (Clark: ~2%) */
+/* Subtle grid overlay (Clark: ~1.5%) */
 .grid-overlay {
   position: fixed;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.02;
+  opacity: 0.015;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+    linear-gradient(rgba(44, 40, 38, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(44, 40, 38, 0.3) 1px, transparent 1px);
   background-size: 64px 64px;
+}
+
+.dark .grid-overlay {
+  background-image:
+    linear-gradient(rgba(236, 230, 224, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 230, 224, 0.2) 1px, transparent 1px);
 }
 
 /* Edge-to-edge marquee (CSS, GPU transform) */
@@ -82,23 +87,44 @@ body {
 }
 
 .grid-hairline {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(44, 40, 38, 0.08);
+}
+.dark .grid-hairline {
+  background: rgba(236, 230, 224, 0.08);
 }
 
 /* Letter-by-letter color cycle for the hero (delay set inline per <span>) */
 @keyframes color-shift {
   0%,
   100% {
-    color: #ffffff;
+    color: #2c2826;
   }
   25% {
-    color: #b08d57;
+    color: #c96a4d;
   }
   50% {
-    color: #d9dce3;
+    color: #3b8e8c;
   }
   75% {
-    color: #2e3a4f;
+    color: #d4973a;
+  }
+}
+.dark .text-color-shift span {
+  animation-name: color-shift-dark;
+}
+@keyframes color-shift-dark {
+  0%,
+  100% {
+    color: #ece6e0;
+  }
+  25% {
+    color: #c96a4d;
+  }
+  50% {
+    color: #3b8e8c;
+  }
+  75% {
+    color: #d4973a;
   }
 }
 .text-color-shift span {
@@ -106,7 +132,7 @@ body {
   animation: color-shift 4s ease-in-out infinite;
 }
 
-/* Card spotlight — a soft gold radial that follows the mouse on hover */
+/* Card spotlight — a soft clay radial that follows the mouse on hover */
 .card-spotlight {
   position: relative;
   overflow: hidden;
@@ -120,8 +146,8 @@ body {
   pointer-events: none;
   background: radial-gradient(
     300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(176, 141, 87, 0.12),
-    rgba(46, 58, 79, 0.06) 50%,
+    rgba(201, 106, 77, 0.12),
+    rgba(201, 106, 77, 0.04) 50%,
     transparent 100%
   );
 }
@@ -129,7 +155,7 @@ body {
   opacity: 1;
 }
 
-/* Typing indicator */
+/* Typing indicator — teal dots */
 @keyframes pulse-dot {
   0%,
   100% {
@@ -149,14 +175,14 @@ body {
   animation-delay: 0.36s;
 }
 
-/* Gold glow ring for the human-in-the-loop call to action */
+/* Warm teal glow ring for the human-in-the-loop call to action */
 @keyframes glow {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(176, 141, 87, 0), 0 0 24px rgba(176, 141, 87, 0.22);
+    box-shadow: 0 0 0 0 rgba(59, 142, 140, 0), 0 0 24px rgba(59, 142, 140, 0.22);
   }
   50% {
-    box-shadow: 0 0 0 3px rgba(176, 141, 87, 0.1), 0 0 34px rgba(176, 141, 87, 0.45);
+    box-shadow: 0 0 0 3px rgba(59, 142, 140, 0.1), 0 0 34px rgba(59, 142, 140, 0.45);
   }
 }
 .glow {
@@ -166,9 +192,9 @@ body {
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(176, 141, 87, 0.05) 25%,
-    rgba(176, 141, 87, 0.22) 37%,
-    rgba(176, 141, 87, 0.05) 63%
+    rgba(59, 142, 140, 0.05) 25%,
+    rgba(59, 142, 140, 0.22) 37%,
+    rgba(59, 142, 140, 0.05) 63%
   );
   background-size: 400% 100%;
   animation: shimmer 1.3s ease infinite;
@@ -184,16 +210,22 @@ body {
 
 /* ── Clark component animations (buttons / labels / numerals) ──────────────── */
 
-/* Gold halo that breathes — primary action buttons + active mode toggle */
+/* Warm amber halo that breathes — primary action buttons + active mode toggle */
 @keyframes glow-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 1px rgba(176, 141, 87, 0.5), 0 4px 12px rgba(176, 141, 87, 0.3),
-      0 0 24px rgba(176, 141, 87, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+      0 2px 10px -2px rgba(59, 142, 140, 0.45),
+      0 0 0 0 rgba(59, 142, 140, 0);
   }
   50% {
-    box-shadow: 0 0 0 1px rgba(176, 141, 87, 0.7), 0 6px 16px rgba(176, 141, 87, 0.5),
-      0 0 36px rgba(176, 141, 87, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    box-shadow:
+      0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+      0 2px 10px -2px rgba(59, 142, 140, 0.55),
+      0 0 22px 1px rgba(59, 142, 140, 0.28);
   }
 }
 
@@ -202,15 +234,15 @@ body {
   0%,
   100% {
     opacity: 0.65;
-    text-shadow: 0 0 0 rgba(176, 141, 87, 0);
+    text-shadow: 0 0 0 rgba(59, 142, 140, 0);
   }
   50% {
     opacity: 1;
-    text-shadow: 0 0 12px rgba(176, 141, 87, 0.35);
+    text-shadow: 0 0 12px rgba(59, 142, 140, 0.35);
   }
 }
 
-/* Sweeping shine for gradient-clipped text (labels on card hover) */
+/* Sweeping shine for text labels on card hover */
 @keyframes text-shimmer {
   0% {
     background-position: 200% center;
@@ -227,18 +259,18 @@ body {
   .animate-pulse-glow {
     animation: pulse-glow 3s ease-in-out infinite;
   }
-  /* Turns text into a sweeping gold→white→gold gradient shine */
+  /* Sweeping teal-to-white-to-teal gradient shine for accent text */
   .animate-shimmer {
-    background-image: linear-gradient(110deg, #b08d57 20%, #ffffff 50%, #b08d57 80%);
+    background-image: linear-gradient(110deg, #3b8e8c 20%, #ffffff 50%, #3b8e8c 80%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     animation: text-shimmer 3s linear infinite;
   }
-  /* Static gold gradient text (used for the number badge on hover) */
+  /* Static terracotta gradient text (used for the number badge on hover) */
   .text-gradient-accent {
-    background-image: linear-gradient(135deg, #b08d57, #e9d9b8);
+    background-image: linear-gradient(135deg, #c96a4d, #e0a088);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -266,38 +298,28 @@ body {
   }
 }
 
-/* ── Clark action buttons: matched Send / Stop pair ────────────────────────────
-   ONE shared recipe (lit-metal gradient + hairline insets live in the className)
-   plus self-contained CSS treatments, all namespaced btn-* to avoid collisions:
-     .btn-sheen        — slow themeable specular light-sweep (Send = gold,
-                         Stop = warm amber), tint/speed driven by CSS vars so the
-                         buttons read as obvious siblings.
-     .btn-send-breathe — Send's signature soft gold halo that breathes ~3.6s.
-     .btn-stop-dot     — Stop's calm dusty-rose "interruptible" status dot.
-     .btn-send-arrow   — Send's magnetic arrow nudge on hover.
-   All infinite motion is disabled under prefers-reduced-motion. */
+/* ── Clark action buttons: matched Send / Stop pair ──────────────────────────── */
 
-/* Signature breathing halo for the gold Send (gentler/slower than glow-pulse). */
+/* Signature breathing halo for the teal Send */
 @keyframes btn-send-breathe {
   0%,
   100% {
     box-shadow:
       0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
-      0 -1px 0 0 rgba(0, 0, 0, 0.18) inset,
-      0 2px 10px -2px rgba(176, 141, 87, 0.45),
-      0 0 0 0 rgba(176, 141, 87, 0);
+      0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+      0 2px 10px -2px rgba(59, 142, 140, 0.45),
+      0 0 0 0 rgba(59, 142, 140, 0);
   }
   50% {
     box-shadow:
       0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
-      0 -1px 0 0 rgba(0, 0, 0, 0.18) inset,
-      0 2px 10px -2px rgba(176, 141, 87, 0.55),
-      0 0 22px 1px rgba(176, 141, 87, 0.28);
+      0 -1px 0 0 rgba(0, 0, 0, 0.12) inset,
+      0 2px 10px -2px rgba(59, 142, 140, 0.55),
+      0 0 22px 1px rgba(59, 142, 140, 0.28);
   }
 }
 
-/* Specular light-sweep: a narrow diagonal band glides left → right on a loop
-   with a long dwell beat, so it reads as a single tasteful pass, not a flash. */
+/* Specular light-sweep */
 @keyframes btn-sheen-glide {
   0% {
     transform: translateX(-180%) skewX(-18deg);
@@ -308,7 +330,7 @@ body {
   }
 }
 
-/* Calm "active / interruptible" ping for the Stop status dot. */
+/* Calm "active / interruptible" ping for the Stop status dot */
 @keyframes btn-stop-ping {
   0% {
     transform: scale(1);
@@ -326,7 +348,7 @@ body {
     animation: btn-send-breathe 3.6s ease-in-out infinite;
   }
 
-  /* Themeable sheen shared by Send (gold-white) and Stop (warm amber). */
+  /* Themeable sheen shared by Send (teal-white) and Stop (warm amber). */
   .btn-sheen {
     --btn-sheen-tint: rgba(255, 255, 255, 0.45);
     --btn-sheen-speed: 4.5s;
@@ -351,13 +373,12 @@ body {
     transform: translateX(-180%) skewX(-18deg);
     animation: btn-sheen-glide var(--btn-sheen-speed, 4.5s) cubic-bezier(0.16, 1, 0.3, 1) infinite;
   }
-  /* Disabled Send: freeze + hide the sheen so the button reads clearly inert. */
   .btn-sheen:disabled::after {
     animation: none;
     opacity: 0;
   }
 
-  /* Magnetic arrow for Send. Markup: Send <span class="btn-send-arrow" aria-hidden="true">→</span> */
+  /* Magnetic arrow for Send */
   .btn-send-arrow {
     display: inline-block;
     margin-inline-start: 0.35em;
@@ -370,7 +391,7 @@ body {
     transform: translateX(1px);
   }
 
-  /* Dusty-rose status dot for Stop. Markup: <span class="btn-stop-dot" aria-hidden="true"></span> Stop */
+  /* Rose clay status dot for Stop */
   .btn-stop-dot {
     position: relative;
     display: inline-block;
@@ -378,15 +399,15 @@ body {
     width: 8px;
     flex-shrink: 0;
     border-radius: 9999px;
-    background-color: #b7707f;
-    box-shadow: 0 0 6px 0 rgba(183, 112, 127, 0.7);
+    background-color: #c4554a;
+    box-shadow: 0 0 6px 0 rgba(196, 85, 74, 0.7);
   }
   .btn-stop-dot::after {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: 9999px;
-    background-color: #b7707f;
+    background-color: #c4554a;
     animation: btn-stop-ping 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
   }
 }

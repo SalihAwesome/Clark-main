@@ -383,10 +383,10 @@ export default function Home() {
           >
             <Icon name="trash" size={15} />
           </button>
-          <div className="flex rounded-lg border border-white/[0.06] bg-white/[0.02] p-1 backdrop-blur-sm">
+          <div className="flex rounded-lg border border-line bg-surface/40 p-1 backdrop-blur-sm">
             {(["chat", "agent"] as Mode[]).map((m) => (
               <button key={m} onClick={() => switchMode(m)}
-                className={`rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-300 ${mode === m ? "bg-accent text-white shadow-accent-glow animate-glow-pulse" : "text-muted-foreground hover:scale-105 hover:bg-white/[0.05] hover:text-foreground"}`}>
+                className={`rounded-md px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all duration-300 ${mode === m ? "bg-accent text-white shadow-accent-glow animate-glow-pulse" : "text-muted-foreground hover:scale-105 hover:bg-surface/70 hover:text-foreground"}`}>
                 {m === "chat" ? "Chat" : "Agent"}
               </button>
             ))}
@@ -424,7 +424,7 @@ export default function Home() {
                                 key={f.name}
                                 href={`/api/workspace/download/${encodeURIComponent(f.name)}`}
                                 download={f.name}
-                                className="group flex items-center gap-2.5 rounded-xl border border-accent/25 bg-accent/[0.05] px-3.5 py-2.5 text-xs text-foreground transition-all duration-200 ease-expo-out hover:border-accent/50 hover:bg-accent/[0.12] hover:shadow-[0_2px_8px_-2px_rgba(176,141,87,0.2)]"
+                                className="group flex items-center gap-2.5 rounded-xl border border-accent/25 bg-accent/[0.05] px-3.5 py-2.5 text-xs text-foreground transition-all duration-200 ease-expo-out hover:border-accent/50 hover:bg-accent/[0.12] hover:shadow-[0_2px_8px_-2px_rgba(59,142,140,0.2)]"
                               >
                                 <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-accent/20 bg-accent/[0.08] text-accent transition-all duration-200 group-hover:bg-accent/[0.14]">
                                   <Icon name="download" size={13} />
@@ -473,7 +473,7 @@ export default function Home() {
                 {busy && (
                   <button
                     onClick={stopAgent}
-                    className="group relative inline-flex h-9 shrink-0 items-center gap-2 overflow-hidden rounded-xl border border-maroon/25 px-4 text-xs font-medium text-[#D89A8A] transition-all duration-300 ease-expo-out [background:linear-gradient(180deg,rgba(183,112,127,0.16)_0%,rgba(183,112,127,0.09)_100%)] shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset] btn-sheen [--btn-sheen-tint:rgba(232,176,140,0.3)] [--btn-sheen-speed:5.5s] hover:border-maroon/45 hover:text-[#E9B58C] hover:[background:linear-gradient(180deg,rgba(183,112,127,0.24)_0%,rgba(183,112,127,0.14)_100%)] hover:[--btn-sheen-speed:2.6s] active:scale-[0.98]"
+                    className="group relative inline-flex h-9 shrink-0 items-center gap-2 rounded-xl border border-maroon/30 px-4 text-xs font-medium text-maroon transition-all duration-200 ease-expo-out bg-maroon/[0.06] hover:bg-maroon/[0.12] active:scale-[0.98]"
                   >
                     <span className="btn-stop-dot" aria-hidden="true" />
                     <span className="relative z-[2]">Stop</span>
@@ -488,19 +488,19 @@ export default function Home() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); send(input); } }}
                     placeholder={mode === "agent" ? "Command the agent…" : "Message Clark…"}
-                    className="h-14 w-full rounded-xl border border-white/[0.08] bg-gradient-to-b from-white/[0.08] to-white/[0.04] px-5 text-base font-medium text-foreground placeholder:text-foreground-subtle backdrop-blur-xl transition-all duration-300 focus:border-accent focus:bg-white/[0.1] focus:shadow-[0_0_0_3px_rgba(176,141,87,0.3),0_4px_20px_rgba(176,141,87,0.2)] focus:outline-none"
+                    className="h-14 w-full rounded-xl border border-line bg-surface/60 px-5 text-base font-medium text-foreground placeholder:text-foreground-subtle backdrop-blur-xl transition-all duration-300 focus:border-accent focus:bg-surface focus:shadow-accent-glow focus:outline-none"
                   />
                   <div className="pointer-events-none absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 group-focus-within:opacity-100" />
                 </div>
                 {busy ? (
                   <button onClick={stopAgent}
-                    className="group relative inline-flex h-14 shrink-0 items-center gap-2.5 overflow-hidden rounded-xl border border-maroon/25 px-6 text-base font-medium text-[#D89A8A] transition-all duration-300 ease-expo-out [background:linear-gradient(180deg,rgba(183,112,127,0.16)_0%,rgba(183,112,127,0.09)_100%)] shadow-[0_1px_0_0_rgba(255,255,255,0.06)_inset] btn-sheen [--btn-sheen-tint:rgba(232,176,140,0.3)] [--btn-sheen-speed:5.5s] hover:border-maroon/45 hover:text-[#E9B58C] hover:[background:linear-gradient(180deg,rgba(183,112,127,0.24)_0%,rgba(183,112,127,0.14)_100%)] hover:[--btn-sheen-speed:2.6s] active:scale-[0.98]">
+                    className="group relative inline-flex h-14 shrink-0 items-center gap-2.5 rounded-xl border border-maroon/30 px-6 text-base font-medium text-maroon transition-all duration-200 ease-expo-out bg-maroon/[0.06] hover:bg-maroon/[0.12] active:scale-[0.98]">
                     <span className="btn-stop-dot" aria-hidden="true" />
                     <span className="relative z-[2]">Stop</span>
                   </button>
                 ) : (
                   <button onClick={() => send(input)} disabled={!input.trim()}
-                    className="group relative h-14 shrink-0 overflow-hidden rounded-xl px-6 text-base font-medium text-accent-foreground transition-all duration-300 ease-expo-out [background:linear-gradient(180deg,#C6A268_0%,#B08D57_55%,#9E7C4A_100%)] shadow-[0_1px_0_0_rgba(255,255,255,0.22)_inset,0_-1px_0_0_rgba(0,0,0,0.18)_inset,0_2px_10px_-2px_rgba(176,141,87,0.45)] btn-sheen [--btn-sheen-tint:rgba(255,247,235,0.5)] enabled:btn-send-breathe hover:brightness-[1.06] hover:[--btn-sheen-speed:1.8s] active:scale-[0.98] active:brightness-100 disabled:cursor-not-allowed disabled:[background:#2E3A4F] disabled:text-foreground-subtle disabled:shadow-none disabled:brightness-100">
+                    className="group relative h-14 shrink-0 overflow-hidden rounded-xl px-6 text-base font-medium text-accent-foreground transition-all duration-300 ease-expo-out bg-primary dark:bg-accent shadow-[0_1px_0_0_rgba(255,255,255,0.22)_inset,0_-1px_0_0_rgba(0,0,0,0.12)_inset,0_2px_10px_-2px_rgba(59,142,140,0.45)] btn-sheen [--btn-sheen-tint:rgba(255,247,235,0.5)] enabled:btn-send-breathe hover:brightness-[1.06] hover:[--btn-sheen-speed:1.8s] active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-surface dark:disabled:bg-dark-surface disabled:text-muted-foreground disabled:shadow-none">
                     <span className="relative z-[2]">Send<span className="btn-send-arrow" aria-hidden="true">→</span></span>
                   </button>
                 )}
@@ -583,7 +583,7 @@ function Hero({ mode, onPick }: { mode: Mode; onPick: (t: string) => void }) {
     <div className="mx-auto max-w-5xl py-10 pt-4">
       <h1 className="text-center font-display text-[clamp(2.5rem,9vw,7rem)] font-extrabold leading-[0.9] tracking-tightest text-foreground">
         Autonomous<br />
-        <span className="text-accent">Web Agent</span>
+        <span className="text-primary">Web Agent</span>
       </h1>
       <p className="mx-auto mt-6 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
         One agent that acts — it drives a real browser, searches the web, fills forms,
@@ -592,11 +592,11 @@ function Hero({ mode, onPick }: { mode: Mode; onPick: (t: string) => void }) {
 
       <div className="mt-10 space-y-4">
         <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-line to-transparent" />
           <span className="animate-pulse-glow font-mono text-xs uppercase tracking-widest text-foreground-subtle">
             {mode === "agent" ? "Try an agent task" : "Try a question"}
           </span>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-line to-transparent" />
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
@@ -616,7 +616,7 @@ function Hero({ mode, onPick }: { mode: Mode; onPick: (t: string) => void }) {
                   <div className="font-mono text-[10px] uppercase tracking-widest text-accent group-hover:animate-shimmer">
                     {q.label}
                   </div>
-                  <p className="text-sm leading-relaxed text-foreground transition-colors duration-200 group-hover:text-white">
+                  <p className="text-sm leading-relaxed text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
                     {q.text}
                   </p>
                 </div>

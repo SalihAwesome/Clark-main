@@ -1,0 +1,6 @@
+[    1570ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3000/favicon.ico:0
+[  188051ms] [LOG] divider bg: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(44, 40, 38, 0.1), rgba(0, 0, 0, 0)) @ :0
+[  188052ms] [LOG] divider bg: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(44, 40, 38, 0.1), rgba(0, 0, 0, 0)) @ :0
+[  188052ms] [LOG] divider bg: linear-gradient(to right, rgba(0, 0, 0, 0), rgb(59, 142, 140), rgba(0, 0, 0, 0)) @ :0
+[  207020ms] [LOG] inputs found: 1 @ :0
+[  207020ms] [LOG] 0 INPUT h-14 w-full rounded-xl border border-line bg-surface/60 px-5 Command the agent… @ :0
