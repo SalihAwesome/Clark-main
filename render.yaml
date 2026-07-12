@@ -27,8 +27,7 @@ services:
     runtime: docker
     repo: https://github.com/SalihAwesome/Clark-main
     branch: main
-    dockerfilePath: Dockerfile
-    dockerContext: ./backend
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
     envVars:
       - key: FIREWORKS_API_KEY
