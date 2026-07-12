@@ -24,10 +24,10 @@
 services:
   - type: web
     name: clark-backend
-    runtime: image
-    repo: https://github.com/your-org/clark-v2
+    runtime: docker
+    repo: https://github.com/SalihAwesome/Clark-main
     branch: main
-    dockerfilePath: ./backend/Dockerfile
+    dockerfilePath: Dockerfile
     dockerContext: ./backend
     healthCheckPath: /api/health
     envVars:
