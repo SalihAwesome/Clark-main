@@ -364,6 +364,49 @@ docker compose up --build
 - Backend: http://localhost:8008
 - Stop: `docker compose down` · Reset stored data: `docker compose down -v`
 
+### Deploying to the Cloud (free)
+
+Clark can run in the cloud on free tiers for demo / judging purposes.
+
+**Architecture:**
+```
+Vercel (free)                            Render (free)
+┌──────────────────────┐     API calls    ┌─────────────────────────┐
+│  Next.js Frontend    │ ──────────────── │  Docker Web Service     │
+│  (auto-deployed)     │   CORS direct    │  │ FastAPI              │
+│                      │                  │  │ Playwright + Chrome  │
+│  NEXT_PUBLIC_BACKEND │                  │  │ Chromium (headless)  │
+│  _URL = Render URL   │                  │  └───────────────────── │
+└──────────────────────┘                  └─────────────────────────┘
+```
+
+**1. Deploy the Backend (Render — free)**
+
+1. Push this repo to GitHub.
+2. Go to [Render Dashboard](https://dashboard.render.com) → **New +** → **Blueprint**.
+3. Connect your GitHub repo. Render detects `render.yaml` and pre-fills the config.
+4. Set the secret env vars in the Render dashboard:
+   - `FIREWORKS_API_KEY` (required — primary LLM)
+   - `GEMINI_API_KEY` (optional — fallback)
+5. Click **Apply**. Render builds the Docker image and deploys.
+6. Copy your backend URL (e.g. `https://clark-backend.onrender.com`).
+
+> **Free tier note:** Render spins down after 15 min idle. First request after idle takes ~30-60 s (cold start). For always-on, upgrade to Starter ($7/mo).
+
+**2. Deploy the Frontend (Vercel — free)**
+
+1. Go to [Vercel Dashboard](https://vercel.com/new) → Import the same GitHub repo.
+2. Vercel auto-detects Next.js — no config needed.
+3. Add environment variable:
+   - `NEXT_PUBLIC_BACKEND_URL` = `https://clark-backend.onrender.com` (your Render URL)
+4. Deploy. Your frontend is live at a `*.vercel.app` URL.
+
+**3. Verify**
+
+- Open the Vercel URL. The UI loads in seconds.
+- Try an agent action. The first API call wakes the backend (30-60 s cold start).
+- The backend health endpoint: `https://clark-backend.onrender.com/api/health`
+
 ---
 
 ## Usage Guide

@@ -1,0 +1,47 @@
+# ============================================================================
+#  Render Blueprint — Clark
+#  Deploy the FastAPI + Playwright backend as a Docker Web Service.
+#
+#  WHAT THIS IS:
+#  Render auto-detects this file in your repo and provisions the services.
+#  One-click deploy: connect your GitHub repo in Render Dashboard →
+#  "Blueprint" → select this repo.
+#
+#  REQUIRED (set in Render dashboard after connecting):
+#    FIREWORKS_API_KEY   — primary LLM provider
+#    GEMINI_API_KEY      — fallback LLM provider
+#
+#  FREE TIER NOTES:
+#  - 512 MB RAM, spins down after 15 min idle (first request wakes it:
+#    30-60 s cold start, then normal speed).
+#  - Chromium runs with --single-process to fit in 512 MB.
+#  - Upgrade to Starter ($7/mo) for no spin-down and more RAM.
+#
+#  FRONTEND:
+#  Deploy separately on Vercel (vercel.json provided). Set env var:
+#    NEXT_PUBLIC_BACKEND_URL = https://clark-backend.onrender.com
+# ============================================================================
+services:
+  - type: web
+    name: clark-backend
+    runtime: image
+    repo: https://github.com/your-org/clark-v2
+    branch: main
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: FIREWORKS_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: BROWSER_HEADLESS
+        value: "true"
+      - key: BROWSER_PERSISTENT
+        value: "false"
+      - key: BROWSER_CDP_AUTODETECT
+        value: "false"
+      - key: BROWSER_DOCKER
+        value: "true"
+      - key: PYTHONUNBUFFERED
+        value: "1"

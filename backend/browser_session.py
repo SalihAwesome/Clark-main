@@ -270,7 +270,17 @@ class BrowserSession:
                       # scripts (Amazon, Cloudflare, reCAPTCHA) score on.
                       "--disable-component-update",
                       "--disable-sync",
-                      "--disable-client-side-phishing-detection"],
+                      "--disable-client-side-phishing-detection",
+                      # BROWSER_DOCKER=true ÷ add flags required when running Chromium inside a
+                      # Docker container on constrained platforms (Render, Railway, Fly.io):
+                      #   --no-sandbox              no user-namespace sandbox in Docker
+                      #   --disable-dev-shm-usage   /dev/shm is tiny in Docker; use /tmp instead
+                      #   --disable-gpu             no GPU available in headless cloud containers
+                      #   --single-process          limit process count on 512 MB RAM tiers
+                      *(["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu",
+                         "--single-process"]
+                        if os.getenv("BROWSER_DOCKER", "").lower() == "true"
+                        else [])],
                 ignore_default_args=["--enable-automation"],  # drop the "automation" banner/flag
             )
             base_context = dict(
