@@ -31,8 +31,8 @@
 - [Performance & Scalability](#performance--scalability)
 - [Future Roadmap](#future-roadmap)
 - [Business & Market Potential](#business--market-potential)
-- [License](#license)
 - [Acknowledgements](#acknowledgements)
+- [License](#license)
 
 ---
 
