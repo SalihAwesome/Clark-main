@@ -7,10 +7,7 @@
 [![Next.js](https://img.shields.io/badge/frontend-Next.js%2014-black?logo=next.js&logoColor=white)](#technology-stack)
 [![Playwright](https://img.shields.io/badge/automation-Playwright%2FChromium-2EAD33?logo=playwright&logoColor=white)](#technology-stack)
 [![Docker](https://img.shields.io/badge/deploy-Docker%20Compose-2496ED?logo=docker&logoColor=white)](#running-with-docker)
-[![AMD Instinct](https://img.shields.io/badge/inference-AMD%20Instinct%20GPUs-ED1C24?logo=amd&logoColor=white)](#amd-technologies-used)
 [![License](https://img.shields.io/badge/license-MIT-blue)](#license)
-
-Built for the **AMD Developer Hackathon — ACT II (Unicorn Track)**.
 
 ## Table of Contents
 
@@ -19,11 +16,9 @@ Built for the **AMD Developer Hackathon — ACT II (Unicorn Track)**.
 - [Our Solution](#our-solution)
 - [Key Features](#key-features)
 - [Why It Matters](#why-it-matters)
-- [Demo](#demo)
 - [System Architecture](#system-architecture)
 - [AI Workflow](#ai-workflow)
 - [Technology Stack](#technology-stack)
-- [AMD Technologies Used](#amd-technologies-used)
 - [Repository Structure](#repository-structure)
 - [Getting Started](#getting-started)
 - [Usage Guide](#usage-guide)
@@ -36,11 +31,8 @@ Built for the **AMD Developer Hackathon — ACT II (Unicorn Track)**.
 - [Performance & Scalability](#performance--scalability)
 - [Future Roadmap](#future-roadmap)
 - [Business & Market Potential](#business--market-potential)
-- [Team](#team)
-- [Contributing](#contributing-optional)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
-- [Contact](#contact)
 
 ---
 
@@ -105,13 +97,6 @@ Clark's value isn't a novelty demo — it's time and access. Every task it compl
 
 ---
 
-## Demo
-
-- **Demo Video:** [Watch on YouTube](https://youtube.com)
-- **Presentation Slides:** [`clark-hackathon-deck.html`](./clark-hackathon-deck.html) — a self-contained, single-file slide deck (open directly in any browser; arrow keys / on-screen controls to navigate; prints cleanly to PDF).
-
----
-
 ## System Architecture
 
 Clark is a two-process stack with a real browser at the edge and a dual-provider LLM core.
@@ -135,7 +120,7 @@ flowchart TB
 
   subgraph LLM["AI inference"]
     direction LR
-    FW["Fireworks AI — DeepSeek<br/>(primary, served on AMD Instinct GPUs)"]
+    FW["Fireworks AI — DeepSeek<br/>(primary)"]
     Gemma["Google Gemma 4<br/>(fallback)"]
   end
 
@@ -226,7 +211,7 @@ For final answers, Clark re-derives its summary from the *actual* tool-call argu
 - `python-dotenv`, `pydantic`, `defusedxml` (safe XML parsing for the arXiv tool)
 
 ### AI & Machine Learning
-- **Fireworks AI** — primary inference provider (DeepSeek-class chat model + a vision model for OCR/screenshot understanding), served on **AMD Instinct GPUs**
+- **Fireworks AI** — primary inference provider (DeepSeek-class chat model + a vision model for OCR/screenshot understanding)
 - **Google Gemma 4** — fallback inference provider (chat + multimodal vision), engaged automatically if Fireworks is unreachable
 - Custom **ReAct** agent loop with a JSON tool-call protocol, brace-matching JSON extraction, and a step-budgeted planner
 - Vision-based ID-card OCR pipeline (transcribe → structure) for auto-filling the saved profile
@@ -243,26 +228,6 @@ For final answers, Clark re-derives its summary from the *actual* tool-call argu
 - **Docker Compose** — two services (`backend`, `frontend`), a healthcheck-gated startup, and a named volume for `agent_workspace`
 - Backend image based on the official Playwright Python image (Chromium + system deps pre-installed)
 - Frontend image is a multi-stage Next.js standalone build served by a minimal Node.js runtime
-
----
-
-## AMD Technologies Used
-
-### AMD Services
-
-Clark's **primary** inference path — every reasoning step, tool-selection decision, and vision/OCR call that goes through Fireworks AI — runs on **AMD Instinct™ GPUs** (MI300X / MI325X / MI355X class accelerators) via Fireworks' AMD-optimized inference stack (FireAttention) and the open **ROCm™** software ecosystem, under Fireworks' multi-year AMD partnership. Google Gemma 4 serves as the automatic fallback provider if the primary path is ever unavailable.
-
-> _If the deployed environment also runs the FastAPI backend or browser workers on AMD EPYC™-based compute, add those details here — the architecture is agnostic to CPU vendor, so this is a deployment choice rather than a code dependency._
-
-### Why AMD
-
-- **High-memory accelerators** (up to 192 GB+ HBM per GPU on the MI300-class line) let Fireworks serve large, DeepSeek-class models with the headroom needed for Clark's longer agentic contexts, without the aggressive truncation that would otherwise hurt reasoning quality.
-- **ROCm's open software stack** avoids single-vendor lock-in for the inference layer Clark depends on for every step of its loop.
-- **Cost/throughput efficiency** at the inference layer keeps the per-step latency of Clark's ReAct loop low enough for a genuinely live, streamed step trace rather than a slow batch job.
-
-### Performance Benefits
-
-Per Fireworks' own published benchmarks, their AMD-specific inference implementation (FireAttention V3) measured on AMD Instinct MI300 GPUs delivers up to **1.4×–1.8× throughput improvements** over comparable inference implementations on other accelerators for Llama-class models — the same optimized serving path that carries Clark's primary chat and vision calls. _(These are Fireworks/AMD's published benchmark figures for their inference stack, not independent measurements Clark's team ran itself — replace with your own numbers if you benchmark Clark's own step latency end-to-end.)_
 
 ---
 
@@ -325,7 +290,7 @@ Set these in `backend/.env` (see `backend/.env.example` for the full list):
 
 | Variable | Required | Default | Purpose |
 |---|---|---|---|
-| `FIREWORKS_API_KEY` | Recommended (primary) | — | Primary LLM provider, served on AMD Instinct GPUs |
+| `FIREWORKS_API_KEY` | Recommended (primary) | — | Primary LLM provider |
 | `GEMINI_API_KEY` | Recommended (fallback) | — | Fallback LLM provider |
 | `FIREWORKS_MODEL` | No | `accounts/fireworks/models/deepseek-v4-pro` | Chat model override |
 | `GEMINI_MODEL` | No | `gemma-4-26b-a4b-it` | Fallback chat/vision model override |
@@ -363,51 +328,6 @@ docker compose up --build
 - Frontend: http://localhost:3000
 - Backend: http://localhost:8008
 - Stop: `docker compose down` · Reset stored data: `docker compose down -v`
-
-### Deploying to the Cloud (free)
-
-Clark can run in the cloud on free tiers for demo / judging purposes.
-
-**Architecture:**
-```
-Vercel (free)                            Render (free)
-┌──────────────────────┐     API calls    ┌─────────────────────────┐
-│  Next.js Frontend    │ ──────────────── │  Docker Web Service     │
-│  (auto-deployed)     │   CORS direct    │  │ FastAPI              │
-│                      │                  │  │ Playwright + Chrome  │
-│  NEXT_PUBLIC_BACKEND │                  │  │ Chromium (headless)  │
-│  _URL = Render URL   │                  │  └───────────────────── │
-└──────────────────────┘                  └─────────────────────────┘
-```
-
-**1. Deploy the Backend (Render — free)**
-
-1. Push this repo to GitHub.
-2. Go to [Render Dashboard](https://dashboard.render.com) → **New +** → **Blueprint**.
-3. Connect your GitHub repo. Render detects `render.yaml` and pre-fills the config.
-4. Set the secret env vars in the Render dashboard:
-   - `FIREWORKS_API_KEY` (required — primary LLM)
-   - `GEMINI_API_KEY` (optional — fallback)
-5. Click **Apply**. Render builds the Docker image and deploys.
-6. Copy your backend URL (e.g. `https://clark-backend.onrender.com`).
-
-> **Free tier note:** Render spins down after 15 min idle. First request after idle takes ~30-60 s (cold start). For always-on, upgrade to Starter ($7/mo).
-
-**2. Deploy the Frontend (Vercel — free)**
-
-1. Go to [Vercel Dashboard](https://vercel.com/new) → Import the same GitHub repo.
-2. Vercel auto-detects Next.js — no config needed.
-3. Add environment variable:
-   - `NEXT_PUBLIC_BACKEND_URL` = `https://clark-backend.onrender.com` (your Render URL)
-4. Deploy. Your frontend is live at a `*.vercel.app` URL.
-
-**3. Verify**
-
-- Open the Vercel URL. The UI loads in seconds.
-- Try an agent action. The first API call wakes the backend (30-60 s cold start).
-- The backend health endpoint: `https://clark-backend.onrender.com/api/health`
-
----
 
 ## Usage Guide
 
@@ -543,26 +463,7 @@ All endpoints are served by the FastAPI backend on port `8008` (proxied to `/api
 - **Usage-based API** for developers who want to embed Clark's agent loop in their own product.
 - **Enterprise tier** — shared credential vaults, admin controls, SSO, and compliance-ready audit exports for teams automating internal or citizen-facing workflows.
 
-**Scalability.** The stateless FastAPI core and per-session browser workers scale horizontally; the local-first architecture keeps baseline infrastructure cost low per user, with LLM inference cost passed through directly — and the AMD Instinct-backed Fireworks inference path gives real headroom on cost/throughput as usage grows.
-
----
-
-## Team
-
-### Members
-
-| Name | Role | Links |
-|---|---|---|
-| &nbsp; | &nbsp; | &nbsp; |
-
-### Roles
-_Add team member details and describe how the work was split._
-
----
-
-## Contributing (optional)
-
-This project was built for the AMD Developer Hackathon ACT II (Unicorn Track). Issues and pull requests are welcome once the repository is public — please open an issue describing the change before submitting a large PR. If you spot something specific to the agent's browser tooling (a site pattern it mishandles, a selector edge case), including a minimal reproduction really helps.
+**Scalability.** The stateless FastAPI core and per-session browser workers scale horizontally; the local-first architecture keeps baseline infrastructure cost low per user, with LLM inference cost passed through directly.
 
 ---
 
@@ -574,13 +475,9 @@ This project is distributed under the [MIT License](LICENSE) — see the `LICENS
 
 ## Acknowledgements
 
-- **AMD** — for the Instinct GPU platform and ROCm software ecosystem powering the primary inference path via Fireworks AI, and for hosting the Developer Hackathon ACT II (Unicorn Track).
 - **Fireworks AI** and **Google Gemma 4** — the two LLM providers behind Clark's reasoning loop and vision calls.
 - **Playwright** — the real-browser automation engine at the core of every action Clark takes.
 - The open-source projects this build stands on: FastAPI, Next.js, React, Tailwind CSS, and everything listed in [Technology Stack](#technology-stack).
 
 ---
 
-## Contact
-
-This project was built for the **AMD Developer Hackathon — ACT II (Unicorn Track)**. For questions or collaboration, please open an issue on the repository.
