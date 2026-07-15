@@ -269,15 +269,28 @@ Clark/
 ## Getting Started
 
 ### Prerequisites
-- Python 3.12–3.14
-- Node.js and npm
-- Google Chrome (used as the automated browser surface)
+
+- [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) (recommended — one-command setup)
 - A **Fireworks AI** API key (primary inference — get one at https://fireworks.ai/)
 - A **Google AI** API key (fallback — get one at https://aistudio.google.com/)
-- Docker and Docker Compose (optional, recommended for the one-command path)
 
-### Installation
+### Running with Docker (recommended)
 
+```bash
+docker compose up --build
+```
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8008
+- Stop: `docker compose down` · Reset stored data: `docker compose down -v`
+
+### Manual Setup
+
+For local development without Docker, you'll also need:
+- Python 3.12–3.14
+- Node.js and npm
+- Google Chrome
+
+Clone the repo and set up the backend:
 ```bash
 git clone https://github.com/your-org/clark.git
 cd Clark
@@ -300,7 +313,7 @@ Set these in `backend/.env` (see `backend/.env.example` for the full list):
 | `BROWSER_PERSISTENT` | No | `true` | Reuse a saved Chrome profile across runs |
 | `BROWSER_CDP_AUTODETECT` | No | `true` | Auto-attach to a debuggable Chrome on `:9222` |
 
-### Running the Project
+### Running Manually
 
 **Backend:**
 ```bash
@@ -319,15 +332,6 @@ npm run dev
 ```
 
 Open http://localhost:3000.
-
-### Running with Docker
-
-```bash
-docker compose up --build
-```
-- Frontend: http://localhost:3000
-- Backend: http://localhost:8008
-- Stop: `docker compose down` · Reset stored data: `docker compose down -v`
 
 ## Usage Guide
 
@@ -467,17 +471,17 @@ All endpoints are served by the FastAPI backend on port `8008` (proxied to `/api
 
 ---
 
-## License
-
-This project is distributed under the [MIT License](LICENSE) — see the `LICENSE` file at the repository root for the full text. If you fork or adapt this project for your own submission, please retain appropriate attribution.
-
----
-
 ## Acknowledgements
 
 - **Fireworks AI** and **Google Gemma 4** — the two LLM providers behind Clark's reasoning loop and vision calls.
 - **Playwright** — the real-browser automation engine at the core of every action Clark takes.
 - The open-source projects this build stands on: FastAPI, Next.js, React, Tailwind CSS, and everything listed in [Technology Stack](#technology-stack).
+
+---
+
+## License
+
+This project is distributed under the [MIT License](LICENSE) — see the `LICENSE` file at the repository root for the full text. If you fork or adapt this project for your own submission, please retain appropriate attribution.
 
 ---
 
